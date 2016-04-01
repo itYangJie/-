@@ -37,11 +37,11 @@ import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
+import com.yj.common.system.IntentUtils;
 import com.yj.smarthome.R;
 import com.yj.smarthome.framework.activity.BaseActivity;
 import com.yj.smarthome.framework.activity.device.DeviceListActivity;
-import com.xpg.common.system.IntentUtils;
-import com.xpg.common.useful.NetworkUtils;
+import com.yjcommon.useful.NetworkUtils;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
 
 import java.util.Timer;

@@ -126,13 +126,17 @@
             android:textSize="14sp" />
 
         <Button
-            android:layout_marginTop="30dp"
+            android:layout_marginLeft="15dp"
             android:id="@+id/btnRetry"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="30dp"
+             android:layout_width="match_parent"
             style="@style/ButtonBlue"
             android:text="@string/airlink_btn_retry" />
         <Button
-            android:layout_margin="10dp"
+            android:layout_margin="15dp"
             android:id="@+id/btnSoftap"
+            android:layout_width="match_parent"
             style="@style/ButtonBlue"
             android:text="@string/airlink_btn_softap" />
     </LinearLayout>

@@ -41,12 +41,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.yj.common.system.IntentUtils;
 import com.yj.smarthome.R;
 import com.yj.smarthome.framework.activity.BaseActivity;
 import com.yj.smarthome.framework.activity.device.DeviceListActivity;
+import com.yj.ui.utils.ToastUtils;
 import com.google.zxing.Result;
-import com.xpg.common.system.IntentUtils;
-import com.xpg.ui.utils.ToastUtils;
 
 /**
  * This activity opens the camera and does the actual scanning on a background

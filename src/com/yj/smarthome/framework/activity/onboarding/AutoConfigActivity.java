@@ -42,9 +42,9 @@ import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.yj.smarthome.R;
 import com.yj.smarthome.framework.activity.BaseActivity;
-import com.xpg.common.useful.NetworkUtils;
-import com.xpg.common.useful.StringUtils;
-import com.xpg.ui.utils.ToastUtils;
+import com.yj.ui.utils.ToastUtils;
+import com.yjcommon.useful.NetworkUtils;
+import com.yjcommon.useful.StringUtils;
 
 // TODO: Auto-generated Javadoc
 /**

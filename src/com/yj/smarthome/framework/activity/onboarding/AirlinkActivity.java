@@ -32,11 +32,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.yj.common.system.IntentUtils;
 import com.yj.smarthome.R;
 import com.yj.smarthome.framework.activity.BaseActivity;
 import com.yj.smarthome.framework.activity.device.DeviceListActivity;
-import com.xpg.common.system.IntentUtils;
-import com.xpg.common.useful.StringUtils;
+import com.yjcommon.useful.StringUtils;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
 import com.xtremeprog.xpgconnect.XPGWifiSDK;
 import com.xtremeprog.xpgconnect.XPGWifiSDK.XPGWifiGAgentType;

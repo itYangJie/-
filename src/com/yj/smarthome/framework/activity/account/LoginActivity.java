@@ -29,13 +29,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yj.common.system.IntentUtils;
 import com.yj.smarthome.R;
 import com.yj.smarthome.framework.activity.BaseActivity;
 import com.yj.smarthome.framework.activity.device.DeviceListActivity;
-import com.xpg.common.system.IntentUtils;
-import com.xpg.common.useful.NetworkUtils;
-import com.xpg.common.useful.StringUtils;
-import com.xpg.ui.utils.ToastUtils;
+import com.yj.ui.utils.ToastUtils;
+import com.yjcommon.useful.NetworkUtils;
+import com.yjcommon.useful.StringUtils;
 
 // TODO: Auto-generated Javadoc
 
@@ -68,9 +68,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private Button btnLogin;
 
 	/**
-	 * The btn register.
+	 * The tv register.
 	 */
-	private Button btnRegister;
+	private TextView tvRegister;
 
 	/**
 	 * The dialog.
@@ -118,7 +118,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			// 登陆失败
 			case LOGIN_FAIL:
 				handler.removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
-				Toast.makeText(LoginActivity.this, msg.obj + "",
+				Toast.makeText(LoginActivity.this, "密码错误或账号不存在",
 						Toast.LENGTH_SHORT).show();
 				dialog.cancel();
 				break;
@@ -157,7 +157,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 		tvForgot.setOnClickListener(this);
 		btnLogin.setOnClickListener(this);
-		btnRegister.setOnClickListener(this);
+		tvRegister.setOnClickListener(this);
 
 	}
 
@@ -169,10 +169,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		etPsw = (EditText) findViewById(R.id.etPsw);
 		tvForgot = (TextView) findViewById(R.id.tvForgot);
 		btnLogin = (Button) findViewById(R.id.btnLogin);
-		btnRegister = (Button) findViewById(R.id.btnRegister);
+		tvRegister = (TextView) findViewById(R.id.tvRegister);
 
 		tvForgot.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); // 下划线
-		
+		tvRegister.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 		dialog = new ProgressDialog(this);
 		dialog.setMessage("登录中，请稍候...");
 		if (setmanager.getUserName() != null) {
@@ -217,7 +217,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			handler.sendEmptyMessageDelayed(
 					handler_key.LOGIN_TIMEOUT.ordinal(), 15000);
 			break;
-		case R.id.btnRegister:
+		case R.id.tvRegister:
 			if (NetworkUtils.isNetworkConnected(this)) {
 				// 打开注册Activity
 				IntentUtils.getInstance().startActivity(this,

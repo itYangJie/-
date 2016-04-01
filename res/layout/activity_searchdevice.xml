@@ -81,6 +81,7 @@
         <Button
             android:id="@+id/btnAddQR"
             style="@style/ButtonBlue"
+            android:layout_width="250dp"
             android:text="@string/search_device_configure_qr_code"
             android:textSize="14sp" />
 
@@ -88,6 +89,7 @@
             android:id="@+id/btnAddGokit"
             style="@style/ButtonBlue"
             android:layout_margin="10dp"
+            android:layout_width="250dp"
             android:text="@string/search_device_configure"
             android:textSize="14sp" />
     </LinearLayout>

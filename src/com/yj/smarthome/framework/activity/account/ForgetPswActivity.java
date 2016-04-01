@@ -49,9 +49,9 @@ import com.yj.smarthome.R;
 import com.yj.smarthome.framework.activity.BaseActivity;
 import com.yj.smarthome.framework.config.Configs;
 import com.yj.smarthome.framework.widget.MyInputFilter;
-import com.xpg.common.useful.NetworkUtils;
-import com.xpg.common.useful.StringUtils;
-import com.xpg.ui.utils.ToastUtils;
+import com.yj.ui.utils.ToastUtils;
+import com.yjcommon.useful.NetworkUtils;
+import com.yjcommon.useful.StringUtils;
 import com.xtremeprog.xpgconnect.XPGWifiSDK;
 
 /**
@@ -406,11 +406,11 @@ public class ForgetPswActivity extends BaseActivity implements OnClickListener {
 			}
 			String phone2 = etName.getText().toString().trim();
 			if (StringUtils.isEmpty(phone2) || phone2.length() != 11) {
-				ToastUtils.showShort(this, "请输入正确的手机号码。");
+				ToastUtils.showShort(this, "请输入正确的手机号码");
 				return;
 			}
 			if (etInputCaptchaCode_farget.getText().toString().isEmpty()) {
-				ToastUtils.showShort(this, "请输入图片验证码。");
+				ToastUtils.showShort(this, "请输入图片验证码");
 				return;
 			}
 			sendVerifyCode(phone2);
@@ -435,7 +435,7 @@ public class ForgetPswActivity extends BaseActivity implements OnClickListener {
 			}
 			String email = etInputEmail.getText().toString().trim();
 			if (StringUtils.isEmpty(email) || !email.contains("@")) {
-				ToastUtils.showShort(this, "请输入正确的账号。");
+				ToastUtils.showShort(this, "请输入正确的账号");
 				return;
 			}
 
@@ -656,23 +656,7 @@ public class ForgetPswActivity extends BaseActivity implements OnClickListener {
 			handler.sendEmptyMessage(handler_key.CaptchaCode.ordinal());
 		}
 	}
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.gizwits.framework.activity.BaseActivity#didRequestSendVerifyCode(int,
-	 * java.lang.String)
-	 */
-	/*
-	 * @Override protected void didRequestSendVerifyCode(int error, String
-	 * errorMessage) { Log.i("error message ", error + " " + errorMessage); if
-	 * (error == 0) {// 发送成功 Message msg = new Message(); msg.what =
-	 * handler_key.TOAST.ordinal(); msg.obj = "发送成功"; handler.sendMessage(msg);
-	 * } else {// 发送失败 Message msg = new Message(); msg.what =
-	 * handler_key.TOAST.ordinal(); msg.obj = errorMessage;
-	 * handler.sendMessage(msg); } }
-	 */
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 

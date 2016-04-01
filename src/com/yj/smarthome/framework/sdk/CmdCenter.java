@@ -25,13 +25,13 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.util.Log;
 
-import com.xpg.common.useful.StringUtils;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
 import com.xtremeprog.xpgconnect.XPGWifiSDK;
 import com.xtremeprog.xpgconnect.XPGWifiSDK.XPGWifiConfigureMode;
 import com.xtremeprog.xpgconnect.XPGWifiSDK.XPGWifiGAgentType;
 import com.yj.smarthome.framework.config.Configs;
 import com.yj.smarthome.framework.config.JsonKeys;
+import com.yjcommon.useful.StringUtils;
 
 // TODO: Auto-generated Javadoc
 
@@ -374,7 +374,7 @@ public class CmdCenter {
 
 	// =================================================================
 	//
-	// 智能云空调控制相关
+	// 控制相关
 	//
 	// =================================================================
 	/**
@@ -387,7 +387,7 @@ public class CmdCenter {
 	 */
 	public void cSwitchOn(XPGWifiDevice xpgWifiDevice, boolean isOn) {
 		cWrite(xpgWifiDevice, JsonKeys.ON_OFF, isOn);
-		cGetStatus(xpgWifiDevice);
+		//cGetStatus(xpgWifiDevice);
 	}
 
 	/**
@@ -398,10 +398,10 @@ public class CmdCenter {
 	 * @param isOn
 	 *            the is on
 	 */
-	public void cSetShake(XPGWifiDevice xpgWifiDevice, boolean isOn) {
+	/*public void cSetShake(XPGWifiDevice xpgWifiDevice, boolean isOn) {
 		cWrite(xpgWifiDevice, JsonKeys.FAN_SHAKE, isOn);
 		cGetStatus(xpgWifiDevice);
-	}
+	}*/
 
 	/**
 	 * C mode.
@@ -411,10 +411,10 @@ public class CmdCenter {
 	 * @param mode
 	 *            the mode
 	 */
-	public void cMode(XPGWifiDevice xpgWifiDevice, int mode) {
+	/*public void cMode(XPGWifiDevice xpgWifiDevice, int mode) {
 		cWrite(xpgWifiDevice, JsonKeys.MODE, mode);
 		cGetStatus(xpgWifiDevice);
-	}
+	}*/
 
 	/**
 	 * C fan speed.
@@ -424,10 +424,10 @@ public class CmdCenter {
 	 * @param fanSpeed
 	 *            the fan speed
 	 */
-	public void cFanSpeed(XPGWifiDevice xpgWifiDevice, int fanSpeed) {
+	/*public void cFanSpeed(XPGWifiDevice xpgWifiDevice, int fanSpeed) {
 		cWrite(xpgWifiDevice, JsonKeys.FAN_SPEED, fanSpeed);
 		cGetStatus(xpgWifiDevice);
-	}
+	}*/
 
 	/**
 	 * C time on.
@@ -437,10 +437,10 @@ public class CmdCenter {
 	 * @param time
 	 *            the time
 	 */
-	public void cTimeOn(XPGWifiDevice xpgWifiDevice, int time) {
+	/*public void cTimeOn(XPGWifiDevice xpgWifiDevice, int time) {
 		cWrite(xpgWifiDevice, JsonKeys.TIME_ON, time);
 		cGetStatus(xpgWifiDevice);
-	}
+	}*/
 
 	/**
 	 * C time off.
@@ -450,10 +450,10 @@ public class CmdCenter {
 	 * @param time
 	 *            the time
 	 */
-	public void cTimeOff(XPGWifiDevice xpgWifiDevice, int time) {
+	/*public void cTimeOff(XPGWifiDevice xpgWifiDevice, int time) {
 		cWrite(xpgWifiDevice, JsonKeys.TIME_OFF, time);
 		cGetStatus(xpgWifiDevice);
-	}
+	}*/
 
 	/**
 	 * C set temp.
@@ -463,9 +463,9 @@ public class CmdCenter {
 	 * @param templature
 	 *            the templature
 	 */
-	public void cSetTemp(XPGWifiDevice xpgWifiDevice, int templature) {
+	/*public void cSetTemp(XPGWifiDevice xpgWifiDevice, int templature) {
 		cWrite(xpgWifiDevice, JsonKeys.SET_TEMP, templature);
 		cGetStatus(xpgWifiDevice);
-	}
+	}*/
 
 }

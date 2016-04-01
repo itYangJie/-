@@ -1,6 +1,11 @@
 <resources>
 
     <string name="app_name">我的家居</string>
+    <string name="open_darwlayout">打开菜单</string>
+        <string name="login_str">登录</string>
+    
+    
+    <string name="close_darwlayout">关闭菜单</string>
     <string name="wifi_first">请先连上Wi-Fi网络</string>
     <string name="wifi_name">Wi-Fi名称</string>
     <string name="tip_exit">再按一次退出程序</string>
@@ -54,7 +59,7 @@
     <string name="device_manage_text4">设备序列号：XXXXXXXXXXXXXXXX</string>
     <string name="device_name">设备名称</string>
     <string name="name">名称</string>
-    <string name="delete_aircondition">删除空调</string>
+    <string name="delete_aircondition">删除设备</string>
     <string name="forget_password">忘记密码</string>
     <string name="forget_password_hint1">手机号/邮箱</string>
     <string name="forget_password_get_verifycode">获取验证码</string>
@@ -67,9 +72,9 @@
     <string name="help_for_app">APP使用帮助</string>
     <string name="login_name_hint">手机／邮箱</string>
     <string name="login_forget_password">忘记密码?</string>
-    <string name="login">登陆</string>
-    <string name="register">注册</string>
-    <string name="main_control_title">移动空调</string>
+    <string name="login">我要登录</string>
+    <string name="register">免费注册！</string>
+    <string name="main_control_title">家居控制台</string>
     <string name="main_control_timing_shutdown">定时关机</string>
     <string name="main_control_advanced_features">高级功能</string>
     <string name="main_control_temp_curve">温度曲线</string>
@@ -92,7 +97,7 @@
     <string name="search_device_already_configure">已配置的设备</string>
     <string name="search_device_tips1">你的网络中还没有已配置的设备,如已经配置过,\n请确认手机正连接着与设备相同的wifi.</string>
     <string name="search_device_configure_qr_code">二维码扫描添加虚拟设备</string>
-    <string name="search_device_configure">我要配置gokit</string>
+    <string name="search_device_configure">我要配置连接</string>
     <string name="account_manage">账号管理</string>
     <string name="about">关于</string>
     <string name="back_to_device_list">返回设备列表</string>

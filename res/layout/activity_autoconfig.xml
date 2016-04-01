@@ -95,6 +95,8 @@
     <Button
         android:id="@+id/btnNext"
         style="@style/ButtonBlue"
+        android:layout_width="match_parent"
+        android:layout_margin="15dp"
         android:text="@string/btn_next" />
 
 </LinearLayout>

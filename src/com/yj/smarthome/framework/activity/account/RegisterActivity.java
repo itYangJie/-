@@ -50,9 +50,9 @@ import com.yj.smarthome.framework.activity.BaseActivity;
 import com.yj.smarthome.framework.activity.onboarding.SearchDeviceActivity;
 import com.yj.smarthome.framework.config.Configs;
 import com.yj.smarthome.framework.widget.MyInputFilter;
-import com.xpg.common.useful.NetworkUtils;
-import com.xpg.common.useful.StringUtils;
-import com.xpg.ui.utils.ToastUtils;
+import com.yj.ui.utils.ToastUtils;
+import com.yjcommon.useful.NetworkUtils;
+import com.yjcommon.useful.StringUtils;
 import com.xtremeprog.xpgconnect.XPGWifiSDK;
 
 // TODO: Auto-generated Javadoc

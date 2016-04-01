@@ -44,13 +44,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yj.common.system.IntentUtils;
 import com.yj.smarthome.R;
 import com.yj.smarthome.framework.activity.BaseActivity;
 import com.yj.smarthome.framework.activity.device.DeviceListActivity;
 import com.yj.smarthome.framework.adapter.SearchListAdapter;
 import com.yj.smarthome.framework.utils.DialogManager;
-import com.xpg.common.system.IntentUtils;
-import com.xpg.common.useful.NetworkUtils;
+import com.yjcommon.useful.NetworkUtils;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
 
 // TODO: Auto-generated Javadoc

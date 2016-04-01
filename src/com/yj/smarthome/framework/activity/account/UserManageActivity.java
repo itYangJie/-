@@ -25,11 +25,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.yj.common.system.IntentUtils;
 import com.yj.smarthome.R;
 import com.yj.smarthome.framework.activity.BaseActivity;
 import com.yj.smarthome.framework.utils.DialogManager;
-import com.xpg.common.system.IntentUtils;
-import com.xpg.ui.utils.ToastUtils;
+import com.yj.ui.utils.ToastUtils;
 
 // TODO: Auto-generated Javadoc
 //TODO: Auto-generated Javadoc

@@ -30,8 +30,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ScrollView;
 
+import com.yj.common.device.DensityUtils;
 import com.yj.smarthome.R;
-import com.xpg.common.device.DensityUtils;
 
 
 // TODO: Auto-generated Javadoc

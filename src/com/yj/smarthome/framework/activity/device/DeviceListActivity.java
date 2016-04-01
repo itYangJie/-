@@ -37,6 +37,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 
+import com.yj.common.system.IntentUtils;
 import com.yj.smarthome.R;
 import com.yj.smarthome.activity.control.MainControlActivity;
 import com.yj.smarthome.framework.activity.BaseActivity;
@@ -47,8 +48,7 @@ import com.yj.smarthome.framework.adapter.DeviceListAdapter;
 import com.yj.smarthome.framework.utils.DialogManager;
 import com.yj.smarthome.framework.widget.RefreshableListView;
 import com.yj.smarthome.framework.widget.RefreshableListView.OnRefreshListener;
-import com.xpg.common.system.IntentUtils;
-import com.xpg.ui.utils.ToastUtils;
+import com.yj.ui.utils.ToastUtils;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
 
 // TODO: Auto-generated Javadoc

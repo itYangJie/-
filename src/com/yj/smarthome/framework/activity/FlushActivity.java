@@ -21,11 +21,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.yj.common.system.IntentUtils;
 import com.yj.smarthome.R;
 import com.yj.smarthome.framework.activity.account.LoginActivity;
 import com.yj.smarthome.framework.activity.device.DeviceListActivity;
 import com.yj.smarthome.framework.utils.StringUtils;
-import com.xpg.common.system.IntentUtils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -65,7 +65,7 @@ public class FlushActivity extends BaseActivity {
 
 				finish();
 			}
-		}, 1000);
+		}, 1800);
 	}
 
 }
