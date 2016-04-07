@@ -21,15 +21,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Dialog;
+import android.app.Notification;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore.Audio;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,6 +53,9 @@ import com.yj.smarthome.framework.utils.DialogManager;
 import com.yj.smarthome.framework.widget.RefreshableListView;
 import com.yj.smarthome.framework.widget.RefreshableListView.OnRefreshListener;
 import com.yj.ui.utils.ToastUtils;
+import com.baidu.android.pushservice.CustomPushNotificationBuilder;
+import com.baidu.android.pushservice.PushConstants;
+import com.baidu.android.pushservice.PushManager;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
 
 // TODO: Auto-generated Javadoc
@@ -180,6 +187,28 @@ public class DeviceListActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_devicelist);
+		//百度推送api
+		 PushManager.startWork(getApplicationContext(),
+	                PushConstants.LOGIN_TYPE_API_KEY,
+	               "xawMARKwA3WSsgyKDs5nzkOy");
+		   /* Resources resource = this.getResources();
+	        String pkgName = this.getPackageName();
+		  CustomPushNotificationBuilder cBuilder = new CustomPushNotificationBuilder(
+	                resource.getIdentifier(
+	                        "notification_custom_builder", "layout", pkgName),
+	                resource.getIdentifier("notification_icon", "id", pkgName),
+	                resource.getIdentifier("notification_title", "id", pkgName),
+	                resource.getIdentifier("notification_text", "id",pkgName));
+	        cBuilder.setNotificationFlags(Notification.FLAG_AUTO_CANCEL);
+	        cBuilder.setNotificationDefaults(Notification.DEFAULT_VIBRATE);
+	        cBuilder.setStatusbarIcon(this.getApplicationInfo().icon);
+	        cBuilder.setLayoutDrawable(resource.getIdentifier(
+	                "simple_notification_icon", "drawable", pkgName));
+	        cBuilder.setNotificationSound(Uri.withAppendedPath(
+	                Audio.Media.INTERNAL_CONTENT_URI, "6").toString());
+	        // 推送高级设置，通知栏样式设置为下面的ID
+	        PushManager.setNotificationBuilder(this, 1, cBuilder);*/
+	        
 		initViews();
 		initEvents();
 		if (getIntent() != null) {

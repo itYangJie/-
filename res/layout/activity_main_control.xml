@@ -39,19 +39,55 @@
                     android:text="@string/main_control_title"
                     android:textColor="@android:color/white"
                     android:textSize="25sp" />
-                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/rlAlarmTips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/tvTitle"
+                   
+                    android:visibility="gone" >
 
-            <CheckBox
-                android:id="@+id/checkBox1"
-                android:layout_width="wrap_content"
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/fault_tips" />
+
+                    <TextView
+                        android:id="@+id/tvAlarmTipsCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:textColor="#ff0000"
+                        android:textSize="18sp" />
+                </RelativeLayout>
+                </RelativeLayout>
+               
+            	
+            <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/rlHeader"
+            android:layout_height="match_parent">
+            <android.support.v4.view.PagerTabStrip
+                android:id="@+id/pager_tab_strip"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="CheckBox" />
-                
+                android:layout_gravity="top"
+                android:background="#ffffff"
+                android:textColor="#000"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp" />
+        </android.support.v4.view.ViewPager>
+            
             </RelativeLayout>
 
-           <include layout="@layout/activity_slibbar"/>
+           <include layout="@layout/activity_slibbar" android:alpha="0.7"/>
     
 
 </android.support.v4.widget.DrawerLayout>

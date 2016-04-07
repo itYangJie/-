@@ -1,10 +1,7 @@
 <resources>
-
     <string name="app_name">我的家居</string>
     <string name="open_darwlayout">打开菜单</string>
-        <string name="login_str">登录</string>
-    
-    
+    <string name="login_str">登录</string>
     <string name="close_darwlayout">关闭菜单</string>
     <string name="wifi_first">请先连上Wi-Fi网络</string>
     <string name="wifi_name">Wi-Fi名称</string>
@@ -32,7 +29,7 @@
     <string name="airlink_tips_error3">请拔下设备电源，再重新接通电源，再点击重试</string>
     <string name="airlink_btn_retry">已经重新拔插电源了，我要重试</string>
     <string name="airlink_btn_softap">手动配置</string>
-    <string name="title_alarm_list">故障信息</string>
+    <string name="title_alarm_list">报警信息</string>
     <string name="btn_call">联系客服</string>
     <string name="autoconfig_keep_wifi">请保持Wi-Fi连接</string>
     <string name="autoconfig_password">Wi-Fi密码</string>
@@ -134,5 +131,5 @@
     <string name="reset_by_phone">通过手机重置密码</string>
     <string name="reset_by_email">通过邮箱重置密码</string>
     <string name="forget_password_get_captchacode">换一换</string>
-
+     <string name="text_led_switch">客厅的灯</string>
 </resources>

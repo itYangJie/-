@@ -18,9 +18,13 @@
 package com.yj.smarthome.framework;
 
 import android.app.Application;
+import android.content.Context;
 
+import com.baidu.android.pushservice.PushConstants;
+import com.baidu.android.pushservice.PushManager;
 import com.xtremeprog.xpgconnect.XPGWifiSDK;
 import com.yj.smarthome.framework.config.Configs;
+import com.yj.smarthome.framework.utils.Utils;
 
 /**
  * 
@@ -43,5 +47,7 @@ public class XpgApplication extends Application {
 		// 设定日志打印级别,日志保存文件名，是否在后台打印数据.
 		XPGWifiSDK.sharedInstance().setLogLevel(Configs.LOG_LEVEL,
 				"BassApp.log", Configs.DEBUG);
+		 
 	}
+	
 }

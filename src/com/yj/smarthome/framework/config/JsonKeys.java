@@ -33,8 +33,33 @@ public class JsonKeys {
 	/** 实体字段名，代表对应的项目. */
 	public final static String KEY_ACTION = "entity0";
 
-	/** 开关. */
-	public final static String ON_OFF = "led";
-
 	
+	
+	/** Led开关 */
+	public final static String LED_ON_OFF = "ledSwitch";
+	/** 空调开关 */
+	public final static String  AIRCONDITION_SWITCH= "airConditionSwitch";
+	/** 空调温度 */
+	public final static String AIRCONDITION_TEMPUTRE = "airConditionTemputre";
+	/** 热水器开关 */
+	public final static String HOTWATER_ON_OFF = "hotWaterSwitch";
+	/** 热水器水温 */
+	public final static String HOTWATER_TEMP = "hotWaterTempture";
+	
+	/** 超声波传感器当前数值 */
+	public final static String VOICE = "voice";
+	/** 超声波传感器设定门限值 */
+	public final static String VOICE_BORDER = "voiceBorder";
+	/** 超声波报警提醒*/
+	public final static String ALERT_VOICE = "alertVoice";
+	
+	/** 当前环境温度数值 */
+	public final static String ENVIRMENT_TEMPTURE = "envirmentTempture";
+	/** 环境温度设定门限值 */
+	public final static String ENVIRMENT_TEMPTURE_BORDER = "envirmentTemptureBorder";
+	/** 环境温度报警提醒 */
+	public final static String ALERT_ENVIRMENT_TEMPTURE = "alertEnvirmentTempture";
+	
+	/** 烟雾报警提醒 */
+	public final static String ALERT_SMOKING = "alertSmoking";
 }

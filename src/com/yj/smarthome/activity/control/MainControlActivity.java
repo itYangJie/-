@@ -35,13 +35,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.PagerTabStrip;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
@@ -70,8 +75,9 @@ import com.yj.smarthome.framework.utils.DensityUtil;
 import com.yj.smarthome.framework.utils.DialogManager;
 import com.yj.smarthome.framework.utils.StringUtils;
 import com.yj.smarthome.framework.utils.DialogManager.OnTimingChosenListener;
-import com.yj.smarthome.framework.widget.AboutVersionActivity;
 import com.yj.smarthome.framework.widget.CircularSeekBar;
+import com.yj.smarthome.framework.widget.SlideSwitchView;
+import com.yj.smarthome.framework.widget.SlideSwitchView.OnSwitchChangedListener;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
 
 // TODO: Auto-generated Javadoc
@@ -84,10 +90,16 @@ import com.xtremeprog.xpgconnect.XPGWifiDevice;
  */
 public class MainControlActivity extends BaseActivity implements OnClickListener
 		 {
-	private CheckBox checkBox;
+	
 	
 	private ActionBarDrawerToggle drawerToggle;
 	private DrawerLayout drawerLayout;
+	private PagerTabStrip pagerTabStrip;
+	private ViewPager mViewPager;
+	private MyPagerAdapter myPagerAdapter;
+	//客厅里的灯开关
+	private SlideSwitchView ledSwitchView;
+	private static String[] titles= {"家居状态","环境状态"};
 	/** The tag. */
 	private final String TAG = "MainControlActivity";
 	private RelativeLayout rlControlMainPage;
@@ -95,6 +107,10 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 	private ImageView ivMenu;
 	/** The tv title. */
 	private TextView tvTitle;
+	/** The rl alarm tips. */
+	private RelativeLayout rlAlarmTips;
+	/** The tv alarm tips count. */
+	private TextView tvAlarmTipsCount;
 	/** The m adapter. */
 	private MenuDeviceAdapter mAdapter;
 	/** The lv device. */
@@ -211,11 +227,8 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 					Log.i("Apptest", statuMap.toString());
 					handler.removeMessages(handler_key.GET_STATUE_TIMEOUT.ordinal());
 					DialogManager.dismissDialog(MainControlActivity.this, progressDialogRefreshing);
-					
-					boolean isOpen=  (Boolean) statuMap.get(JsonKeys.ON_OFF);
-					checkBox.setChecked(isOpen);
+					upDateUi();
 				}
-				
 				
 				break;
 			case ALARM:
@@ -232,6 +245,14 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 
 				for (DeviceAlarm alarm : alarmList) {
 					alarmShowList.add(alarm.getDesc());
+				}
+				if (alarmList != null && alarmList.size() > 0) {
+					if (isNeedDialog) {
+						DialogManager.showDialog(MainControlActivity.this, mFaultDialog);
+					}
+					setTipsLayoutVisiblity(true, alarmList.size());
+				} else {
+					setTipsLayoutVisiblity(false, 0);
 				}
 				break;
 			case DISCONNECTED:
@@ -262,8 +283,16 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 				break;
 			}
 		}
+		
 	};
-
+	/**
+	 * 界面更新ui操作
+	 */
+	private void upDateUi() {
+		//客厅的开关
+		ledSwitchView.setChecked((Boolean) statuMap.get(JsonKeys.LED_ON_OFF));
+		
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -344,13 +373,22 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 	 * Inits the views.
 	 */
 	private void initViews() {
-		checkBox = (CheckBox)findViewById(R.id.checkBox1);
-		
+		mViewPager = (ViewPager)findViewById(R.id.pager);
+        pagerTabStrip=(PagerTabStrip) findViewById(R.id.pager_tab_strip);
+        // 设置标签字体
+        pagerTabStrip.setTextSize(TypedValue.COMPLEX_UNIT_PX, 55);
+        //设置标签下划线的颜色
+        pagerTabStrip.setTabIndicatorColor(getResources().getColor(R.color.indicatorcolor));
+        myPagerAdapter = new MyPagerAdapter();
+        mViewPager.setAdapter(myPagerAdapter);
+        
+		rlAlarmTips = (RelativeLayout) findViewById(R.id.rlAlarmTips);
+		tvAlarmTipsCount = (TextView) findViewById(R.id.tvAlarmTipsCount);
 		drawerLayout = (DrawerLayout)findViewById(R.id.main_layout);
 		rlControlMainPage = (RelativeLayout) findViewById(R.id.rlControlMainPage);
 		ivMenu = (ImageView) findViewById(R.id.ivMenu);
 		tvTitle = (TextView) findViewById(R.id.tvTitle);
-		mFaultDialog = DialogManager.getDeviceErrirDialog(MainControlActivity.this, "设备故障", new OnClickListener() {
+		mFaultDialog = DialogManager.getDeviceErrirDialog(MainControlActivity.this, "设备报警", new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:10010"));
@@ -393,9 +431,10 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 	 * Inits the events.
 	 */
 	private void initEvents() {
-		checkBox.setOnClickListener(this);
+		
+		rlAlarmTips.setOnClickListener(this);
 		ivMenu.setOnClickListener(this);
-		tvTitle.setOnClickListener(this);
+		//tvTitle.setOnClickListener(this);
 		lvDevice.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -423,6 +462,50 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 		refreshMenu();
 		refreshMainControl();
 	}
+	/**
+	 * 主显示界面viewpager的adapter
+	 * @author Administrator
+	 *
+	 */
+	private class MyPagerAdapter extends PagerAdapter{
+		@Override
+		public int getCount() {
+			return titles.length;
+		}
+		@Override
+		public boolean isViewFromObject(View arg0, Object arg1) {
+			return arg0==arg1;
+		}
+		@Override
+		public CharSequence getPageTitle(int position) {
+			// TODO Auto-generated method stub
+			return titles[position];
+		}
+		 @Override
+	     public Object instantiateItem(ViewGroup container, int position) {
+	            View view ;
+	            if(position==0){
+	            	view = View.inflate(MainControlActivity.this, R.layout.pager_home_info, null);
+	            	ledSwitchView = (SlideSwitchView)view.findViewById(R.id.mSlideSwitchView);
+	            	ledSwitchView.setOnChangeListener(new OnSwitchChangedListener() {
+						@Override
+						public void onSwitchChange(SlideSwitchView switchView, boolean isChecked) {
+							mCenter.cSwitchOn(mXpgWifiDevice, isChecked);
+						}
+					});
+	            }else{
+	            	view = View.inflate(MainControlActivity.this, R.layout.pager_envirment_info, null);
+	            	
+	            }
+	            container.addView(view);//一定不能少，将view加入到viewPager中
+	            return view;
+	        }
+		@Override
+		public void destroyItem(View container, int position, Object object) {
+			// TODO Auto-generated method stub
+			super.destroyItem(container, position, object);
+		}
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -437,12 +520,12 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 		case R.id.ivMenu:
 			drawerLayout.openDrawer(Gravity.LEFT);
 			break;
-		case R.id.checkBox1:
-			System.out.println(checkBox.isChecked());
-			if(!checkBox.isChecked()){
-				mCenter.cSwitchOn(mXpgWifiDevice, false);
-			}else{
-				mCenter.cSwitchOn(mXpgWifiDevice, true);
+		
+		case R.id.rlAlarmTips:
+			if (alarmList != null && alarmList.size() > 0) {
+				Intent intent = new Intent(MainControlActivity.this, AlarmListActicity.class);
+				intent.putExtra("alarm_list", alarmList);
+				startActivity(intent);
 			}
 			break;
 		}
@@ -553,6 +636,20 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 			DialogManager.showDialog(this, progressDialogRefreshing);
 		}
 		refreshMainControl();
+	}
+	/**
+	 * 设置提示框显示与隐藏,设置故障数量.
+	 * 
+	 * @param isShow
+	 *            the is show
+	 * @param count
+	 *            the count
+	 * @true 显示
+	 * @false 隐藏
+	 */
+	private void setTipsLayoutVisiblity(boolean isShow, int count) {
+		rlAlarmTips.setVisibility(isShow ? View.VISIBLE : View.GONE);
+		tvAlarmTipsCount.setText(count + "");
 	}
 	/**
 	 * 把警告信息存入列表

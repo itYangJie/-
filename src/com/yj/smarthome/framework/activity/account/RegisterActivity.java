@@ -65,6 +65,7 @@ import com.xtremeprog.xpgconnect.XPGWifiSDK;
  */
 
 public class RegisterActivity extends BaseActivity implements OnClickListener {
+	
 	/**
 	 * The pb CaptchaCode_loading
 	 */
@@ -655,5 +656,6 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			}
 		}, 1000, 1000);
 	}
-
 }
+
+
