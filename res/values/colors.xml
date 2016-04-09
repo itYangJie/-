@@ -4,7 +4,7 @@
     <color name="black">#000</color>
     <color name="gray">#a3a3a3</color>
     <color name="yellow">#ffff00</color>
-     <color  name="indicatorcolor">#FF0084FF</color>
+     <color  name="indicatorcolor">#ffffff</color>
       <color name="contents_text">#ff000000</color>
   <color name="encode_view">#ffffffff</color>
   <color name="help_button_view">#ffcccccc</color>

@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -204,8 +205,8 @@ public class DeviceListActivity extends BaseActivity implements
 	        cBuilder.setStatusbarIcon(this.getApplicationInfo().icon);
 	        cBuilder.setLayoutDrawable(resource.getIdentifier(
 	                "simple_notification_icon", "drawable", pkgName));
-	        cBuilder.setNotificationSound(Uri.withAppendedPath(
-	                Audio.Media.INTERNAL_CONTENT_URI, "6").toString());
+	        String path = Uri.parse("android:resource://com.yj.smarthome/"+R.raw.alert).getPath();
+	        cBuilder.setNotificationSound(path);
 	        // 推送高级设置，通知栏样式设置为下面的ID
 	        PushManager.setNotificationBuilder(this, 1, cBuilder);*/
 	        

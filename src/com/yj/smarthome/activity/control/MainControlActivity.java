@@ -113,8 +113,7 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 	private TextView tvAlarmTipsCount;
 	/** The m adapter. */
 	private MenuDeviceAdapter mAdapter;
-	/** The lv device. */
-	private ListView lvDevice;
+	
 	/** The is show. */
 	private boolean isShow;
 	/** The device data map. */
@@ -353,8 +352,7 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 		}
 		mAdapter.notifyDataSetChanged();
 		int px = DensityUtil.dip2px(this, mAdapter.getCount() * 50);
-		lvDevice.setLayoutParams(new android.widget.LinearLayout.LayoutParams(
-				android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, px));
+		
 	}
 
 	/**
@@ -376,9 +374,10 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 		mViewPager = (ViewPager)findViewById(R.id.pager);
         pagerTabStrip=(PagerTabStrip) findViewById(R.id.pager_tab_strip);
         // 设置标签字体
-        pagerTabStrip.setTextSize(TypedValue.COMPLEX_UNIT_PX, 55);
+        pagerTabStrip.setTextSize(TypedValue.COMPLEX_UNIT_PX, 50);
         //设置标签下划线的颜色
         pagerTabStrip.setTabIndicatorColor(getResources().getColor(R.color.indicatorcolor));
+        
         myPagerAdapter = new MyPagerAdapter();
         mViewPager.setAdapter(myPagerAdapter);
         
@@ -397,8 +396,7 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 			}
 		});
 		mAdapter = new MenuDeviceAdapter(this, bindlist);
-		lvDevice = (ListView) findViewById(R.id.lvDevice);
-		lvDevice.setAdapter(mAdapter);
+		
 		progressDialogRefreshing = new ProgressDialog(MainControlActivity.this);
 		progressDialogRefreshing.setMessage("正在更新状态,请稍后");
 		progressDialogRefreshing.setCancelable(false);
@@ -435,22 +433,7 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 		rlAlarmTips.setOnClickListener(this);
 		ivMenu.setOnClickListener(this);
 		//tvTitle.setOnClickListener(this);
-		lvDevice.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if (!drawerLayout.isDrawerOpen(Gravity.LEFT )) {
-					return;
-				}
-				if (!mAdapter.getItem(position).isOnline())
-					return;
-				if (mAdapter.getChoosedPos() != position) {
-					alarmShowList.clear();
-					mAdapter.setChoosedPos(position);
-					mXpgWifiDevice = bindlist.get(position);
-				}
-				drawerLayout.openDrawer(Gravity.LEFT);;
-			}
-		});
+		
 	}
 	/**
 	 * Inits the params.

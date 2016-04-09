@@ -47,7 +47,6 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@+id/tvTitle"
-                   
                     android:visibility="gone" >
 
                     <ImageView
@@ -67,8 +66,6 @@
                         android:textSize="18sp" />
                 </RelativeLayout>
                 </RelativeLayout>
-               
-            	
             <android.support.v4.view.ViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
@@ -79,15 +76,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:background="#ffffff"
-                android:textColor="#000"
+                android:background="@drawable/top_short"
+                android:textColor="#ffffff"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp" />
         </android.support.v4.view.ViewPager>
             
             </RelativeLayout>
 
-           <include layout="@layout/activity_slibbar" android:alpha="0.7"/>
+           <include layout="@layout/activity_slibbar" />
     
 
 </android.support.v4.widget.DrawerLayout>
