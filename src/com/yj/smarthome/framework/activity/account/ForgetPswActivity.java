@@ -18,6 +18,7 @@
 package com.yj.smarthome.framework.activity.account;
 
 import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -47,6 +48,7 @@ import android.widget.ToggleButton;
 
 import com.yj.smarthome.R;
 import com.yj.smarthome.framework.activity.BaseActivity;
+
 import com.yj.smarthome.framework.config.Configs;
 import com.yj.smarthome.framework.widget.MyInputFilter;
 import com.yj.ui.utils.ToastUtils;
@@ -268,48 +270,60 @@ public class ForgetPswActivity extends BaseActivity implements OnClickListener {
 	 * The handler.
 	 */
 	@SuppressLint("HandlerLeak")
-	Handler handler = new Handler() {
+    private MyHandler handler = new MyHandler(this) ;
+	
+	private static class MyHandler extends Handler{
+		private SoftReference<ForgetPswActivity> softReference;
+		public MyHandler(ForgetPswActivity context){
+			softReference = new SoftReference<ForgetPswActivity>(context);
+		}
 		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			handler_key key = handler_key.values()[msg.what];
-			switch (key) {
+			ForgetPswActivity activity =  softReference.get();
+			if(activity!=null){
+				super.handleMessage(msg);
+				handler_key key = handler_key.values()[msg.what];
+				switch (key) {
 
-			case TICK_TIME:
-				secondleft--;
-				if (secondleft <= 0) {
-					timer.cancel();
-					btnReGetCode.setEnabled(true);
-					btnReGetCode.setText("重新获取验证码");
-					btnReGetCode.setBackgroundResource(R.drawable.button_blue_short);
-				} else {
-					btnReGetCode.setText(
-							secondleft + "" + getResources().getText(R.string.forget_password_get_verifycode3));
+				case TICK_TIME:
+					activity.secondleft--;
+					if (activity.secondleft <= 0) {
+						activity.timer.cancel();
+						activity.btnReGetCode.setEnabled(true);
+						activity.btnReGetCode.setText("重新获取验证码");
+						activity.btnReGetCode.setBackgroundResource(R.drawable.button_blue_short);
+					} else {
+						activity.btnReGetCode.setText(
+								activity.secondleft + "" + activity.getResources().getText(R.string.forget_password_get_verifycode3));
 
+					}
+					break;
+
+				case CHANGE_SUCCESS:
+					activity.finish();
+					break;
+
+				case TOAST:
+					activity.tvDialog.setText((String) msg.obj);
+					activity.rlDialog.setVisibility(View.VISIBLE);
+					activity.dialog.cancel();
+					break;
+				case CaptchaCode:
+					activity.ivGetCaptchaCode_farget.setVisibility(View.GONE);
+					activity.CaptchaCode_loading.setVisibility(View.VISIBLE);
+					XPGWifiSDK.sharedInstance().getCaptchaCode(Configs.APP_SECRET);
+					break;
+				case CHANGE_UI:
+
+					activity.toogleUI(ui_statu.CHANGE);
+					activity.isStartTimer();
+					break;
 				}
-				break;
-
-			case CHANGE_SUCCESS:
-				finish();
-				break;
-
-			case TOAST:
-				tvDialog.setText((String) msg.obj);
-				rlDialog.setVisibility(View.VISIBLE);
-				dialog.cancel();
-				break;
-			case CaptchaCode:
-				ivGetCaptchaCode_farget.setVisibility(View.GONE);
-				CaptchaCode_loading.setVisibility(View.VISIBLE);
-				XPGWifiSDK.sharedInstance().getCaptchaCode(Configs.APP_SECRET);
-				break;
-			case CHANGE_UI:
-
-				toogleUI(ui_statu.CHANGE);
-				isStartTimer();
-				break;
 			}
 		}
-	};
+	
+	}
+	
+	
 
 	/*
 	 * (non-Javadoc)

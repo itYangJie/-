@@ -17,6 +17,8 @@
  */
 package com.yj.smarthome.framework.activity.onboarding;
 
+import java.lang.ref.SoftReference;
+
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +33,7 @@ import com.yj.common.system.IntentUtils;
 import com.yj.smarthome.R;
 import com.yj.smarthome.framework.activity.BaseActivity;
 import com.yj.smarthome.framework.activity.device.DeviceListActivity;
+import com.yjcommon.useful.NetworkUtils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -81,29 +84,35 @@ public class BindingDeviceActivity extends BaseActivity implements
 	/**
 	 * The handler.
 	 */
-	Handler handler = new Handler() {
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see android.os.Handler#handleMessage(android.os.Message)
-		 */
+private MyHandler handler = new MyHandler(this) ;
+	
+	private static class MyHandler extends Handler{
+		private SoftReference<BindingDeviceActivity> softReference;
+		public MyHandler(BindingDeviceActivity context){
+			softReference = new SoftReference<BindingDeviceActivity>(context);
+		}
 		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			handler_key key = handler_key.values()[msg.what];
-			switch (key) {
-			case BIND_SUCCESS:
-				IntentUtils.getInstance().startActivity(BindingDeviceActivity.this,
-						DeviceListActivity.class);
-				finish();
-				break;
-			case BIND_FAILED:
-				llStartConfig.setVisibility(View.GONE);
-				llConfigFailed.setVisibility(View.VISIBLE);
-				break;
+			BindingDeviceActivity activity =  softReference.get();
+			if(activity!=null){
+				super.handleMessage(msg);
+				handler_key key = handler_key.values()[msg.what];
+				switch (key) {
+				case BIND_SUCCESS:
+					IntentUtils.getInstance().startActivity(activity,
+							DeviceListActivity.class);
+					activity.finish();
+					break;
+				case BIND_FAILED:
+					activity.llStartConfig.setVisibility(View.GONE);
+					activity.llConfigFailed.setVisibility(View.VISIBLE);
+					break;
+				}
 			}
 		}
-	};
+	
+	}
+	
+	
 
 	/* (non-Javadoc)
 	 * @see com.gizwits.framework.activity.BaseActivity#onCreate(android.os.Bundle)

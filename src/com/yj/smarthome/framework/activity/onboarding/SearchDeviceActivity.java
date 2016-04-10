@@ -17,6 +17,7 @@
  */
 package com.yj.smarthome.framework.activity.onboarding;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,46 +143,53 @@ public class SearchDeviceActivity extends BaseActivity implements
     /**
      * The handler.
      */
-    Handler handler = new Handler() {
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see android.os.Handler#handleMessage(android.os.Message)
-         */
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            handler_key key = handler_key.values()[msg.what];
-            switch (key) {
+private MyHandler handler = new MyHandler(this) ;
+	
+	private static class MyHandler extends Handler{
+		private SoftReference<SearchDeviceActivity> softReference;
+		public MyHandler(SearchDeviceActivity context){
+			softReference = new SoftReference<SearchDeviceActivity>(context);
+		}
+		public void handleMessage(Message msg) {
+			SearchDeviceActivity activity =  softReference.get();
+			if(activity!=null){
+				super.handleMessage(msg);
+				handler_key key = handler_key.values()[msg.what];
+				switch (key) {
                 case FOUND_FINISH:
-                	if(deviceList.size()>0)
-                		deviceList.clear();
+                	if(activity.deviceList.size()>0)
+                		activity.deviceList.clear();
                 	
-                    if (allDeviceList.size() > 0) {
-                        for (XPGWifiDevice device : allDeviceList) {
-                            if (device.isLAN() && !device.isBind(setmanager.getUid())) {
-                                deviceList.add(device);
+                    if (activity.allDeviceList.size() > 0) {
+                        for (XPGWifiDevice device : activity.allDeviceList) {
+                            if (device.isLAN() && !device.isBind(activity.setmanager.getUid())) {
+                            	activity.deviceList.add(device);
                             }
                         }
-                        adapter.notifyDataSetChanged();
-                        lvDevices.setVisibility(View.VISIBLE);
-                        tvTips.setVisibility(View.GONE);
+                        activity.adapter.notifyDataSetChanged();
+                        activity.lvDevices.setVisibility(View.VISIBLE);
+                        activity.tvTips.setVisibility(View.GONE);
                     } else {
-                        lvDevices.setVisibility(View.GONE);
-                        tvTips.setVisibility(View.VISIBLE);
+                    	activity.lvDevices.setVisibility(View.GONE);
+                    	activity.tvTips.setVisibility(View.VISIBLE);
                     }
-                    loadingDialog.cancel();
+                    activity.loadingDialog.cancel();
                     break;
                 case FOUND_SUCCESS:
-                    adapter.notifyDataSetChanged();
+                	activity.adapter.notifyDataSetChanged();
                     break;
                 case CHANGE_SUCCESS:
                     IntentUtils.getInstance().startActivity(
-                            SearchDeviceActivity.this, AutoConfigActivity.class);
+                            activity, AutoConfigActivity.class);
                     break;
             }
-        }
-    };
+			}
+		}
+	
+	}
+	
+    
+    
 
     /*
      * (non-Javadoc)

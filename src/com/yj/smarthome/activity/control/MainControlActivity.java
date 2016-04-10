@@ -17,6 +17,7 @@
  */
 package com.yj.smarthome.activity.control;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -31,6 +32,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -60,11 +62,13 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.yj.common.system.IntentUtils;
 import com.yj.smarthome.R;
 import com.yj.smarthome.framework.activity.BaseActivity;
+import com.yj.smarthome.framework.activity.account.ChangePswActivity;
 import com.yj.smarthome.framework.activity.account.UserManageActivity;
 import com.yj.smarthome.framework.activity.device.DeviceListActivity;
 import com.yj.smarthome.framework.adapter.MenuDeviceAdapter;
@@ -76,8 +80,10 @@ import com.yj.smarthome.framework.utils.DialogManager;
 import com.yj.smarthome.framework.utils.StringUtils;
 import com.yj.smarthome.framework.utils.DialogManager.OnTimingChosenListener;
 import com.yj.smarthome.framework.widget.CircularSeekBar;
+import com.yj.smarthome.framework.widget.ColorArcProgressBar;
 import com.yj.smarthome.framework.widget.SlideSwitchView;
 import com.yj.smarthome.framework.widget.SlideSwitchView.OnSwitchChangedListener;
+import com.yj.smarthome.framework.widget.WaveLoadingView;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
 
 // TODO: Auto-generated Javadoc
@@ -90,8 +96,11 @@ import com.xtremeprog.xpgconnect.XPGWifiDevice;
  */
 public class MainControlActivity extends BaseActivity implements OnClickListener
 		 {
-	
-	
+	private ColorArcProgressBar hotWaterTempBar;
+	private WaveLoadingView waveLoadingView;
+	private SeekBar envirmentMaxSeekbar;
+	private TextView tv_temp_max;
+	private LinearLayout linear_temp_max;
 	private ActionBarDrawerToggle drawerToggle;
 	private DrawerLayout drawerLayout;
 	private PagerTabStrip pagerTabStrip;
@@ -186,111 +195,133 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 	/**
 	 * The handler.
 	 */
+private MyHandler handler = new MyHandler(this) ;
 	
-	@SuppressLint("HandlerLeak")
-	Handler handler = new Handler() {
+	private static class MyHandler extends Handler{
+		private SoftReference<MainControlActivity> softReference;
+		public MyHandler(MainControlActivity context){
+			softReference = new SoftReference<MainControlActivity>(context);
+		}
 		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			handler_key key = handler_key.values()[msg.what];
-			switch (key) {
-			case RECEIVED:
-				if (deviceDataMap == null) {
-					return;
-				}
-				try {
-					if (deviceDataMap.get("data") != null) {
-						Log.i("info", (String) deviceDataMap.get("data"));
-						inputDataToMaps(statuMap, (String) deviceDataMap.get("data"));
-						//System.out.println(statuMap);
+			MainControlActivity activity =  softReference.get();
+			if(activity!=null){
+				super.handleMessage(msg);
+				handler_key key = handler_key.values()[msg.what];
+				switch (key) {
+				case RECEIVED:
+					if (activity.deviceDataMap == null) {
+						return;
 					}
-					alarmList.clear();
-					if (deviceDataMap.get("alters") != null) {
-						Log.i("info", (String) deviceDataMap.get("alters"));
-						// 返回主线程处理报警数据刷新
-						inputAlarmToList((String) deviceDataMap.get("alters"));
+					try {
+						if (activity.deviceDataMap.get("data") != null) {
+							Log.i("info", (String) activity.deviceDataMap.get("data"));
+							activity.inputDataToMaps(activity.statuMap, (String) activity.deviceDataMap.get("data"));
+							//System.out.println(statuMap);
+						}
+						activity.alarmList.clear();
+						if (activity.deviceDataMap.get("alters") != null) {
+							Log.i("info", (String) activity.deviceDataMap.get("alters"));
+							// 返回主线程处理报警数据刷新
+							activity.inputAlarmToList((String) activity.deviceDataMap.get("alters"));
+						}
+						if (activity.deviceDataMap.get("faults") != null) {
+							Log.i("info", (String) activity.deviceDataMap.get("faults"));
+							// 返回主线程处理错误数据刷新
+							activity.inputAlarmToList((String)activity. deviceDataMap.get("faults"));
+						}
+						// 返回主线程处理P0数据刷新
+						sendEmptyMessage(handler_key.UPDATE_UI.ordinal());
+						sendEmptyMessage(handler_key.ALARM.ordinal());
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-					if (deviceDataMap.get("faults") != null) {
-						Log.i("info", (String) deviceDataMap.get("faults"));
-						// 返回主线程处理错误数据刷新
-						inputAlarmToList((String) deviceDataMap.get("faults"));
+				case UPDATE_UI:
+					if (activity.statuMap != null && activity.statuMap.size() > 0) {
+						Log.i("Apptest", activity.statuMap.toString());
+						removeMessages(handler_key.GET_STATUE_TIMEOUT.ordinal());
+						DialogManager.dismissDialog(activity, activity.progressDialogRefreshing);
+						activity.upDateUi();
 					}
-					// 返回主线程处理P0数据刷新
-					handler.sendEmptyMessage(handler_key.UPDATE_UI.ordinal());
-					handler.sendEmptyMessage(handler_key.ALARM.ordinal());
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			case UPDATE_UI:
-				if (statuMap != null && statuMap.size() > 0) {
-					Log.i("Apptest", statuMap.toString());
-					handler.removeMessages(handler_key.GET_STATUE_TIMEOUT.ordinal());
-					DialogManager.dismissDialog(MainControlActivity.this, progressDialogRefreshing);
-					upDateUi();
-				}
-				
-				break;
-			case ALARM:
-				// 是否需要弹dialog判断
-				boolean isNeedDialog = false;
-				for (DeviceAlarm alarm : alarmList) {
-					if (!alarmShowList.contains((String) alarm.getDesc())) {
-						alarmShowList.add(alarm.getDesc());
-						isNeedDialog = true;
-					}
-				}
-
-				alarmShowList.clear();
-
-				for (DeviceAlarm alarm : alarmList) {
-					alarmShowList.add(alarm.getDesc());
-				}
-				if (alarmList != null && alarmList.size() > 0) {
-					if (isNeedDialog) {
-						DialogManager.showDialog(MainControlActivity.this, mFaultDialog);
-					}
-					setTipsLayoutVisiblity(true, alarmList.size());
-				} else {
-					setTipsLayoutVisiblity(false, 0);
-				}
-				break;
-			case DISCONNECTED:
-				if (!drawerLayout.isDrawerOpen(Gravity.LEFT )) {
-					DialogManager.dismissDialog(MainControlActivity.this, progressDialogRefreshing);
-					DialogManager.dismissDialog(MainControlActivity.this, mFaultDialog);
 					
-					DialogManager.showDialog(MainControlActivity.this, mDisconnectDialog);
+					break;
+				case ALARM:
+					// 是否需要弹dialog判断
+					boolean isNeedDialog = false;
+					for (DeviceAlarm alarm : activity.alarmList) {
+						if (!activity.alarmShowList.contains((String) alarm.getDesc())) {
+							activity.alarmShowList.add(alarm.getDesc());
+							isNeedDialog = true;
+						}
+					}
+
+					activity.alarmShowList.clear();
+
+					for (DeviceAlarm alarm : activity.alarmList) {
+						activity.alarmShowList.add(alarm.getDesc());
+					}
+					if (activity.alarmList != null && activity.alarmList.size() > 0) {
+						if (isNeedDialog) {
+							DialogManager.showDialog(activity, activity.mFaultDialog);
+						}
+						activity.setTipsLayoutVisiblity(true, activity.alarmList.size());
+					} else {
+						activity.setTipsLayoutVisiblity(false, 0);
+					}
+					break;
+				case DISCONNECTED:
+					if (!activity.drawerLayout.isDrawerOpen(Gravity.LEFT )) {
+					
+						DialogManager.dismissDialog(activity, activity.progressDialogRefreshing);
+						DialogManager.dismissDialog(activity, activity.mFaultDialog);
+						
+						DialogManager.showDialog(activity, activity.mDisconnectDialog);
+					}
+					break;
+				case GET_STATUE:
+					activity.mCenter.cGetStatus(mXpgWifiDevice);
+					break;
+				case GET_STATUE_TIMEOUT:
+					sendEmptyMessage(handler_key.DISCONNECTED.ordinal());
+					break;
+				case LOGIN_SUCCESS:
+					removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
+					activity.refreshMainControl();
+					break;
+				case LOGIN_FAIL:
+					removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
+					sendEmptyMessage(handler_key.DISCONNECTED.ordinal());
+					break;
+				case LOGIN_TIMEOUT:
+					activity.isTimeOut = true;
+					sendEmptyMessage(handler_key.DISCONNECTED.ordinal());
+					break;
 				}
-				break;
-			case GET_STATUE:
-				mCenter.cGetStatus(mXpgWifiDevice);
-				break;
-			case GET_STATUE_TIMEOUT:
-				handler.sendEmptyMessage(handler_key.DISCONNECTED.ordinal());
-				break;
-			case LOGIN_SUCCESS:
-				handler.removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
-				refreshMainControl();
-				break;
-			case LOGIN_FAIL:
-				handler.removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
-				handler.sendEmptyMessage(handler_key.DISCONNECTED.ordinal());
-				break;
-			case LOGIN_TIMEOUT:
-				isTimeOut = true;
-				handler.sendEmptyMessage(handler_key.DISCONNECTED.ordinal());
-				break;
 			}
 		}
-		
-	};
+	
+	}
+	
 	/**
 	 * 界面更新ui操作
 	 */
 	private void upDateUi() {
 		//客厅的开关
 		ledSwitchView.setChecked((Boolean) statuMap.get(JsonKeys.LED_ON_OFF));
+		//热水器开关
+		boolean isHotWaterOpen = (Boolean) statuMap.get(JsonKeys.HOTWATER_ON_OFF);
+		if(!isHotWaterOpen){
+			hotWaterTempBar.setTitle("热水器未打开,点击打开");
+			hotWaterTempBar.setCurrentValues(0);
+		}else{
+			hotWaterTempBar.setTitle("当前热水器温度");
+			hotWaterTempBar.setCurrentValues(Float.parseFloat( (String) statuMap.get(JsonKeys.HOTWATER_TEMP)));
+		}
 		
+		//环境温度
+		int tempture = Integer.parseInt((String) statuMap.get(JsonKeys.ENVIRMENT_TEMPTURE));
+		waveLoadingView.setProgressValue(tempture+40);
+		waveLoadingView.setCenterTitle(tempture+"摄氏度");
 	}
 	/*
 	 * (non-Javadoc)
@@ -324,6 +355,7 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 	public void onResume() {
 		
 		if (drawerLayout.isDrawerOpen(Gravity.LEFT )) {
+	
 			refreshMenu();
 		} else {
 			if (!mDisconnectDialog.isShowing())
@@ -371,7 +403,9 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 	 * Inits the views.
 	 */
 	private void initViews() {
+		
 		mViewPager = (ViewPager)findViewById(R.id.pager);
+		
         pagerTabStrip=(PagerTabStrip) findViewById(R.id.pager_tab_strip);
         // 设置标签字体
         pagerTabStrip.setTextSize(TypedValue.COMPLEX_UNIT_PX, 50);
@@ -424,7 +458,8 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
         drawerLayout.setDrawerListener(drawerToggle);
         drawerToggle.syncState();
 	}
-
+	
+	 
 	/**
 	 * Inits the events.
 	 */
@@ -470,15 +505,68 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 	            if(position==0){
 	            	view = View.inflate(MainControlActivity.this, R.layout.pager_home_info, null);
 	            	ledSwitchView = (SlideSwitchView)view.findViewById(R.id.mSlideSwitchView);
+	            	hotWaterTempBar = (ColorArcProgressBar)view.findViewById(R.id.bar2);
+	            	hotWaterTempBar.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View arg0) {
+							boolean isOpen = (Boolean) statuMap.get(JsonKeys.HOTWATER_ON_OFF);
+							if(isOpen){
+								//关闭
+								hotWaterTempBar.setTitle("热水器未打开,点击打开");
+								hotWaterTempBar.setCurrentValues(0);
+								mCenter.cHotwaterSwitchOn(mXpgWifiDevice, false);
+							}else{
+								//打开
+								hotWaterTempBar.setTitle("当前热水器温度");
+								mCenter.cHotwaterSwitchOn(mXpgWifiDevice, true);
+							}
+							mCenter.cGetStatus(mXpgWifiDevice);
+						}
+					});
 	            	ledSwitchView.setOnChangeListener(new OnSwitchChangedListener() {
 						@Override
 						public void onSwitchChange(SlideSwitchView switchView, boolean isChecked) {
-							mCenter.cSwitchOn(mXpgWifiDevice, isChecked);
+							mCenter.cLedSwitchOn(mXpgWifiDevice, isChecked);
 						}
 					});
 	            }else{
 	            	view = View.inflate(MainControlActivity.this, R.layout.pager_envirment_info, null);
-	            	
+	            	waveLoadingView = (WaveLoadingView)view.findViewById(R.id.waveLoadingView);
+	            	envirmentMaxSeekbar = (SeekBar) view.findViewById(R.id.envirmentMaxSeekbar);
+	            	tv_temp_max = (TextView)view.findViewById(R.id.tv_temp_max);
+	            	linear_temp_max = (LinearLayout)view.findViewById(R.id.linear_temp_max);
+	            	envirmentMaxSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+						@Override
+						public void onProgressChanged(SeekBar arg0, int arg1,
+								boolean arg2) {
+							tv_temp_max.setText("当前温度报警值:"+(arg1-40)+"摄氏度");
+						}
+						@Override
+						public void onStartTrackingTouch(SeekBar arg0) {
+							
+						}
+						@Override
+						public void onStopTrackingTouch(SeekBar arg0) {
+							mCenter.cEenvirTempBorder(mXpgWifiDevice, arg0.getProgress()-40);
+							statuMap.put(JsonKeys.ENVIRMENT_TEMPTURE_BORDER, String.valueOf(arg0.getProgress()-40));
+						}
+					});
+	            	waveLoadingView.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View arg0) {
+							if(!linear_temp_max.isShown()){
+							waveLoadingView.setBottomTitle("点击隐藏温度临界值设置条");
+							linear_temp_max.setVisibility(View.VISIBLE);
+						 	
+						 	int temp_max = Integer.parseInt((String) statuMap.get(JsonKeys.ENVIRMENT_TEMPTURE_BORDER));
+						 	envirmentMaxSeekbar.setProgress(temp_max+40);
+						 	tv_temp_max.setText("当前温度报警值:"+temp_max+"摄氏度");
+							}else{
+								waveLoadingView.setBottomTitle("点击设置温度报警临界值");
+								linear_temp_max.setVisibility(View.GONE);
+							}
+						}
+					});
 	            }
 	            container.addView(view);//一定不能少，将view加入到viewPager中
 	            return view;
@@ -497,11 +585,13 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 	@Override
 	public void onClick(View v) {
 		if (drawerLayout.isDrawerOpen(Gravity.LEFT )) {
+		
 			return;
 		}
 		switch (v.getId()) {
 		case R.id.ivMenu:
 			drawerLayout.openDrawer(Gravity.LEFT);
+			
 			break;
 		
 		case R.id.rlAlarmTips:
@@ -547,6 +637,7 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 	 *            the did
 	 * @return the XPG wifi device
 	 */
+	
 	private void DisconnectOtherDevice() {
 		for (XPGWifiDevice theDevice : bindlist) {
 			if (theDevice.isConnected() && !theDevice.getDid().equalsIgnoreCase(mXpgWifiDevice.getDid()))
@@ -557,7 +648,8 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 	public void onBackPressed() {
 		if (drawerLayout.isDrawerOpen(Gravity.LEFT )) {
 			drawerLayout.closeDrawer(Gravity.LEFT);
-		} else {
+		}
+		else {
 			if (mXpgWifiDevice != null && mXpgWifiDevice.isConnected()) {
 				mCenter.cDisconnect(mXpgWifiDevice);
 				DisconnectOtherDevice();
@@ -661,6 +753,7 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 			handler.sendEmptyMessage(handler_key.UPDATE_UI.ordinal());
 		}
 	}
+	
 	/**
 	 * 获取格式：2014年6月24日 17:23.
 	 * 
@@ -678,6 +771,7 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 	}
 	public void onClickSlipBar(View view) {
 		if (!drawerLayout.isDrawerOpen(Gravity.LEFT )) {
+		
 			return;
 		}
 		switch (view.getId()) {

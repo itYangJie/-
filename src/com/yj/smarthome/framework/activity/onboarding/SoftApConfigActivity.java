@@ -44,6 +44,7 @@ import com.yj.smarthome.framework.activity.device.DeviceListActivity;
 import com.yjcommon.useful.NetworkUtils;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
 
+import java.lang.ref.SoftReference;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -149,40 +150,47 @@ public class SoftApConfigActivity extends BaseActivity implements OnClickListene
     /**
      * The handler.
      */
-    Handler handler = new Handler() {
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see android.os.Handler#handleMessage(android.os.Message)
-         */
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            handler_key key = handler_key.values()[msg.what];
-            switch (key) {
+private MyHandler handler = new MyHandler(this) ;
+	
+	private static class MyHandler extends Handler{
+		private SoftReference<SoftApConfigActivity> softReference;
+		public MyHandler(SoftApConfigActivity context){
+			softReference = new SoftReference<SoftApConfigActivity>(context);
+		}
+		public void handleMessage(Message msg) {
+			SoftApConfigActivity activity =  softReference.get();
+			if(activity!=null){
+				super.handleMessage(msg);
+				handler_key key = handler_key.values()[msg.what];
+				switch (key) {
                 case TICK_TIME:
-                    secondleft--;
-                    if (secondleft <= 0) {
-                        timer.cancel();
+                    activity.secondleft--;
+                    if ( activity.secondleft <= 0) {
+                    	 activity.timer.cancel();
                         sendEmptyMessage(handler_key.CONFIG_FAILED.ordinal());
                     } else {
-                        tvTick.setText(secondleft + "");
+                    	 activity.tvTick.setText( activity.secondleft + "");
                     }
                     break;
 
                 case CHANGE_WIFI:
-                    showLayout(UI_STATE.PswInput);
+                	 activity.showLayout(UI_STATE.PswInput);
                     break;
                 case CONFIG_SUCCESS:
-                    showLayout(UI_STATE.ResultSuccess);
+                	 activity.showLayout(UI_STATE.ResultSuccess);
                     break;
                 case CONFIG_FAILED:
-                    showLayout(UI_STATE.ResultFailed);
+                	 activity.showLayout(UI_STATE.ResultFailed);
                     break;
 
             }
-        }
-    };
+			}
+		}
+	
+	}
+	
+    
+  
 
     /** 网络状态广播接受器. */
     ConnectChangeBroadcast mChangeBroadcast = new ConnectChangeBroadcast();

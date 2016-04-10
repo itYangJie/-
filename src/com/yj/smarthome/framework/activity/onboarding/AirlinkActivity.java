@@ -17,6 +17,7 @@
  */
 package com.yj.smarthome.framework.activity.onboarding;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -35,7 +36,10 @@ import android.widget.TextView;
 import com.yj.common.system.IntentUtils;
 import com.yj.smarthome.R;
 import com.yj.smarthome.framework.activity.BaseActivity;
+import com.yj.smarthome.framework.activity.account.RegisterActivity;
 import com.yj.smarthome.framework.activity.device.DeviceListActivity;
+import com.yj.smarthome.framework.config.Configs;
+import com.yj.ui.utils.ToastUtils;
 import com.yjcommon.useful.StringUtils;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
 import com.xtremeprog.xpgconnect.XPGWifiSDK;
@@ -137,36 +141,47 @@ public class AirlinkActivity extends BaseActivity implements OnClickListener {
     /**
      * The handler.
      */
-    Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            handler_key key = handler_key.values()[msg.what];
-            switch (key) {
+private MyHandler handler = new MyHandler(this) ;
+	
+	private static class MyHandler extends Handler{
+		private SoftReference<AirlinkActivity> softReference;
+		public MyHandler(AirlinkActivity context){
+			softReference = new SoftReference<AirlinkActivity>(context);
+		}
+		public void handleMessage(Message msg) {
+			AirlinkActivity activity =  softReference.get();
+			if(activity!=null){
+				super.handleMessage(msg);
+				handler_key key = handler_key.values()[msg.what];
+				 switch (key) {
 
-                case TICK_TIME:
-                    secondleft--;
-                    if (secondleft <= 0) {
-                        timer.cancel();
-                        sendEmptyMessage(handler_key.CONFIG_FAILED.ordinal());
-                    } else {
-                        tvTick.setText(secondleft + "");
-                    }
-                    break;
+	                case TICK_TIME:
+	                    activity.secondleft--;
+	                    if (activity.secondleft <= 0) {
+	                    	activity.timer.cancel();
+	                        sendEmptyMessage(handler_key.CONFIG_FAILED.ordinal());
+	                    } else {
+	                    	activity.tvTick.setText(activity.secondleft + "");
+	                    }
+	                    break;
 
-                case CONFIG_SUCCESS:
-                    IntentUtils.getInstance().startActivity(AirlinkActivity.this,
-                            DeviceListActivity.class);
-                    finish();
-                    break;
+	                case CONFIG_SUCCESS:
+	                    IntentUtils.getInstance().startActivity(activity,
+	                            DeviceListActivity.class);
+	                    activity.finish();
+	                    break;
 
 
-                case CONFIG_FAILED:
-                    showLayout(UI_STATE.Result);
-                    break;
+	                case CONFIG_FAILED:
+	                	activity.showLayout(UI_STATE.Result);
+	                    break;
 
-            }
-        }
-    };
+	            }
+			}
+		}
+	
+	}
+    
 
     /*
      * (non-Javadoc)

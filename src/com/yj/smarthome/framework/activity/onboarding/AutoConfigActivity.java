@@ -17,6 +17,8 @@
  */
 package com.yj.smarthome.framework.activity.onboarding;
 
+import java.lang.ref.SoftReference;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -40,8 +42,10 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.AdapterView.OnItemSelectedListener;
 
+import com.yj.common.system.IntentUtils;
 import com.yj.smarthome.R;
 import com.yj.smarthome.framework.activity.BaseActivity;
+import com.yj.smarthome.framework.activity.device.DeviceListActivity;
 import com.yj.ui.utils.ToastUtils;
 import com.yjcommon.useful.NetworkUtils;
 import com.yjcommon.useful.StringUtils;
@@ -103,26 +107,33 @@ public class AutoConfigActivity extends BaseActivity implements OnClickListener 
 	}
 
 	/** The handler. */
-	Handler handler = new Handler() {
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see android.os.Handler#handleMessage(android.os.Message)
-		 */
+private MyHandler handler = new MyHandler(this) ;
+	
+	private static class MyHandler extends Handler{
+		private SoftReference<AutoConfigActivity> softReference;
+		public MyHandler(AutoConfigActivity context){
+			softReference = new SoftReference<AutoConfigActivity>(context);
+		}
 		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			handler_key key = handler_key.values()[msg.what];
-			switch (key) {
-			case CHANGE_WIFI:
-				strSsid = NetworkUtils
-						.getCurentWifiSSID(AutoConfigActivity.this);
-				tvSsid.setText(getString(R.string.wifi_name) + strSsid);
-				break;
+			AutoConfigActivity activity =  softReference.get();
+			if(activity!=null){
+				super.handleMessage(msg);
+				handler_key key = handler_key.values()[msg.what];
+				switch (key) {
+				case CHANGE_WIFI:
+					activity.strSsid = NetworkUtils
+							.getCurentWifiSSID(activity);
+					activity.tvSsid.setText(activity.getString(R.string.wifi_name) + activity.strSsid);
+					break;
 
+				}
 			}
 		}
-	};
+	
+	}
+    
+	
+	
 
 	/*
 	 * (non-Javadoc)

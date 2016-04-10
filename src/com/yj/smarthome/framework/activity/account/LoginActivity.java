@@ -17,6 +17,8 @@
  */
 package com.yj.smarthome.framework.activity.account;
 
+import java.lang.ref.SoftReference;
+
 import android.app.ProgressDialog;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -100,39 +102,51 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	/**
 	 * The handler.
 	 */
-	Handler handler = new Handler() {
+	private MyHandler handler = new MyHandler(this) ;
+	
+	private static class MyHandler extends Handler{
+		private SoftReference<LoginActivity> softReference;
+		public MyHandler(LoginActivity context){
+			softReference = new SoftReference<LoginActivity>(context);
+		}
 		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			handler_key key = handler_key.values()[msg.what];
-			switch (key) {
-			// 登陆成功
-			case LOGIN_SUCCESS:
-				handler.removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
-				Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT)
-						.show();
-				dialog.cancel();
-				IntentUtils.getInstance().startActivity(LoginActivity.this,
-						DeviceListActivity.class);
-				finish();
-				break;
-			// 登陆失败
-			case LOGIN_FAIL:
-				handler.removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
-				Toast.makeText(LoginActivity.this, "密码错误或账号不存在",
-						Toast.LENGTH_SHORT).show();
-				dialog.cancel();
-				break;
-			// 登录超时
-			case LOGIN_TIMEOUT:
-				handler.removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
-				Toast.makeText(LoginActivity.this, "登陆超时", Toast.LENGTH_SHORT)
-						.show();
-				dialog.cancel();
-				break;
-
+			LoginActivity activity =  softReference.get();
+			if(activity!=null){
+				super.handleMessage(msg);
+				handler_key key = handler_key.values()[msg.what];
+				switch (key) {
+				// 登陆成功
+				case LOGIN_SUCCESS:
+					removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
+					Toast.makeText(activity, "登录成功", Toast.LENGTH_SHORT)
+							.show();
+					activity.dialog.cancel();
+					IntentUtils.getInstance().startActivity(activity,
+							DeviceListActivity.class);
+					activity.finish();
+					break;
+				// 登陆失败
+				case LOGIN_FAIL:
+					removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
+					Toast.makeText(activity, "密码错误或账号不存在",
+							Toast.LENGTH_SHORT).show();
+					activity.dialog.cancel();
+					break;
+				// 登录超时
+				case LOGIN_TIMEOUT:
+					removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
+					Toast.makeText(activity, "登陆超时", Toast.LENGTH_SHORT)
+							.show();
+					activity.dialog.cancel();
+					break;
+				
 			}
 		}
-	};
+		}
+	
+	}
+	
+	
 
 	/*
 	 * @see

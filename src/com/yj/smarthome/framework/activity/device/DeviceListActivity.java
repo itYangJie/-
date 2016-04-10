@@ -17,6 +17,7 @@
  */
 package com.yj.smarthome.framework.activity.device;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,9 +48,11 @@ import com.yj.smarthome.R;
 import com.yj.smarthome.activity.control.MainControlActivity;
 import com.yj.smarthome.framework.activity.BaseActivity;
 import com.yj.smarthome.framework.activity.account.LoginActivity;
+import com.yj.smarthome.framework.activity.account.RegisterActivity;
 import com.yj.smarthome.framework.activity.onboarding.BindingDeviceActivity;
 import com.yj.smarthome.framework.activity.onboarding.SearchDeviceActivity;
 import com.yj.smarthome.framework.adapter.DeviceListAdapter;
+import com.yj.smarthome.framework.config.Configs;
 import com.yj.smarthome.framework.utils.DialogManager;
 import com.yj.smarthome.framework.widget.RefreshableListView;
 import com.yj.smarthome.framework.widget.RefreshableListView.OnRefreshListener;
@@ -58,6 +61,7 @@ import com.baidu.android.pushservice.CustomPushNotificationBuilder;
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
+import com.xtremeprog.xpgconnect.XPGWifiSDK;
 
 // TODO: Auto-generated Javadoc
 //TODO: Auto-generated Javadoc
@@ -144,39 +148,48 @@ public class DeviceListActivity extends BaseActivity implements
 	}
 
 	/** The handler. */
-	Handler handler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			handler_key key = handler_key.values()[msg.what];
-			switch (key) {
-			case FOUND:
-				lvDevices.completeRefreshing();
-				break;
-
-			case LOGIN_SUCCESS:
-				DialogManager.dismissDialog(DeviceListActivity.this, progressDialog);
-				IntentUtils.getInstance().startActivity(
-						DeviceListActivity.this, MainControlActivity.class);
-				break;
-
-			case LOGIN_FAIL:
-				DialogManager.dismissDialog(DeviceListActivity.this, progressDialog);
-				ToastUtils.showShort(DeviceListActivity.this, "连接失败");
-				break;
-			case LOGIN_TIMEOUT:
-				DialogManager.dismissDialog(DeviceListActivity.this, progressDialog);
-				ToastUtils.showShort(DeviceListActivity.this, "连接失败");
-				break;
-			case EXIT:
-				isExit = false;
-				break;
-			}
-			deviceListAdapter.changeDatas(deviceslist);
+	private MyHandler handler = new MyHandler(this) ;
+	
+	private static class MyHandler extends Handler{
+		private SoftReference<DeviceListActivity> softReference;
+		public MyHandler(DeviceListActivity context){
+			softReference = new SoftReference<DeviceListActivity>(context);
 		}
+		public void handleMessage(Message msg) {
+			DeviceListActivity activity =  softReference.get();
+			if(activity!=null){
+				super.handleMessage(msg);
+				handler_key key = handler_key.values()[msg.what];
+				switch (key) {
+				case FOUND:
+					activity.lvDevices.completeRefreshing();
+					break;
 
-	};
+				case LOGIN_SUCCESS:
+					DialogManager.dismissDialog(activity, activity.progressDialog);
+					IntentUtils.getInstance().startActivity(
+							activity, MainControlActivity.class);
+					break;
+
+				case LOGIN_FAIL:
+					DialogManager.dismissDialog(activity, activity.progressDialog);
+					ToastUtils.showShort(activity, "连接失败");
+					break;
+				case LOGIN_TIMEOUT:
+					DialogManager.dismissDialog(activity, activity.progressDialog);
+					ToastUtils.showShort(activity, "连接失败");
+					break;
+				case EXIT:
+					activity.isExit = false;
+					break;
+				}
+				activity.deviceListAdapter.changeDatas(deviceslist);
+		}
+		}
+	
+	}
+	
+	
 
 	/*
 	 * (non-Javadoc)

@@ -385,11 +385,18 @@ public class CmdCenter {
 	 * @param isOn
 	 *            the is on
 	 */
-	public void cSwitchOn(XPGWifiDevice xpgWifiDevice, boolean isOn) {
+	public void cLedSwitchOn(XPGWifiDevice xpgWifiDevice, boolean isOn) {
 		cWrite(xpgWifiDevice, JsonKeys.LED_ON_OFF, isOn);
 		//cGetStatus(xpgWifiDevice);
 	}
 
-	
+	public void cHotwaterSwitchOn(XPGWifiDevice xpgWifiDevice, boolean isOn) {
+		cWrite(xpgWifiDevice, JsonKeys.HOTWATER_ON_OFF, isOn);
+		
+	}
+	public void cEenvirTempBorder(XPGWifiDevice xpgWifiDevice, int temp) {
+		cWrite(xpgWifiDevice, JsonKeys.ENVIRMENT_TEMPTURE_BORDER, temp);
+		
+	}
 
 }

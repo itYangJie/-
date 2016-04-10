@@ -18,6 +18,7 @@
 package com.yj.smarthome.framework.activity.account;
 
 import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -45,8 +46,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.yj.common.system.IntentUtils;
 import com.yj.smarthome.R;
 import com.yj.smarthome.framework.activity.BaseActivity;
+import com.yj.smarthome.framework.activity.device.DeviceListActivity;
 import com.yj.smarthome.framework.activity.onboarding.SearchDeviceActivity;
 import com.yj.smarthome.framework.config.Configs;
 import com.yj.smarthome.framework.widget.MyInputFilter;
@@ -231,54 +234,66 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	/**
 	 * The handler.
 	 */
-	Handler handler = new Handler() {
+private MyHandler handler = new MyHandler(this) ;
+	
+	private static class MyHandler extends Handler{
+		private SoftReference<RegisterActivity> softReference;
+		public MyHandler(RegisterActivity context){
+			softReference = new SoftReference<RegisterActivity>(context);
+		}
 		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			handler_key key = handler_key.values()[msg.what];
-			switch (key) {
+			RegisterActivity activity =  softReference.get();
+			if(activity!=null){
+				super.handleMessage(msg);
+				handler_key key = handler_key.values()[msg.what];
+				switch (key) {
+				case TICK_TIME:
+					activity.secondleft--;
+					if (activity.secondleft <= 0) {
+						activity.timer.cancel();
+						activity.btnReGetCode.setEnabled(true);
+						activity.btnReGetCode.setText("重新获取验证码");
+						activity.btnReGetCode.setBackgroundResource(R.drawable.button_blue_short);
+					} else {
+						activity.btnReGetCode.setText(activity.secondleft + "秒后\n重新获取");
 
-			case TICK_TIME:
-				secondleft--;
-				if (secondleft <= 0) {
-					timer.cancel();
-					btnReGetCode.setEnabled(true);
-					btnReGetCode.setText("重新获取验证码");
-					btnReGetCode.setBackgroundResource(R.drawable.button_blue_short);
-				} else {
-					btnReGetCode.setText(secondleft + "秒后\n重新获取");
+					}
+					break;
 
-				}
-				break;
+				case REG_SUCCESS:
+					ToastUtils.showShort(activity, (String) msg.obj);
+					activity.dialog.cancel();
+					Bundle mBundle = new Bundle();
+					mBundle.putBoolean("isRegister", true);
+					Intent mIntent = new Intent();
+					mIntent.putExtras(mBundle);
+					mIntent.setClass(activity, SearchDeviceActivity.class);
+					activity.startActivity(mIntent);
+					activity.finish();
+					break;
 
-			case REG_SUCCESS:
-				ToastUtils.showShort(RegisterActivity.this, (String) msg.obj);
-				dialog.cancel();
-				Bundle mBundle = new Bundle();
-				mBundle.putBoolean("isRegister", true);
-				Intent mIntent = new Intent();
-				mIntent.putExtras(mBundle);
-				mIntent.setClass(RegisterActivity.this, SearchDeviceActivity.class);
-				startActivity(mIntent);
-				finish();
-				break;
+				case TOAST:
+					ToastUtils.showShort(activity, (String) msg.obj);
+					activity.dialog.cancel();
+					break;
+				case CaptchaCode:
+					XPGWifiSDK.sharedInstance().getCaptchaCode(Configs.APP_SECRET);
+					activity.ivGetCaptchaCode.setVisibility(View.GONE);
+					activity.CaptchaCode_loading.setVisibility(View.VISIBLE);
+					break;
+				case CHANGE:
 
-			case TOAST:
-				ToastUtils.showShort(RegisterActivity.this, (String) msg.obj);
-				dialog.cancel();
-				break;
-			case CaptchaCode:
-				XPGWifiSDK.sharedInstance().getCaptchaCode(Configs.APP_SECRET);
-				ivGetCaptchaCode.setVisibility(View.GONE);
-				CaptchaCode_loading.setVisibility(View.VISIBLE);
-				break;
-			case CHANGE:
-
-				toogleUI(ui_statue.PHONE);
-				isStartTimer();
-				break;
+					activity.toogleUI(ui_statue.PHONE);
+					activity.isStartTimer();
+					break;
+				
 			}
 		}
-	};
+		}
+	
+	}
+	
+	
 
 	/*
 	 * (non-Javadoc)

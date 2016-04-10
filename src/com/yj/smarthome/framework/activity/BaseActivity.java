@@ -17,6 +17,7 @@
  */
 package com.yj.smarthome.framework.activity;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -80,12 +81,19 @@ public class BaseActivity extends Activity {
 	protected static XPGWifiDevice mXpgWifiDevice;
 
 	/** The handler. */
-	private Handler handler = new Handler() {
+	private MyHandler handler = new MyHandler(this) ;
+		
+	private static class MyHandler extends Handler{
+		private SoftReference<BaseActivity> softReference;
+		public MyHandler(BaseActivity context){
+			softReference = new SoftReference<BaseActivity>(context);
+		}
 		public void handleMessage(android.os.Message msg) {
-			isExit = false;
-		};
-	};
-
+			if(softReference.get()!=null){
+				softReference.get().isExit = false;
+			}
+		}
+	}
 	/**
 	 * XPGWifiDeviceListener
 	 * <p/>

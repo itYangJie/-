@@ -17,6 +17,8 @@
  */
 package com.yj.smarthome.framework.activity.account;
 
+import java.lang.ref.SoftReference;
+
 import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
@@ -130,31 +132,40 @@ public class ChangePswActivity extends BaseActivity implements OnClickListener {
 	/**
 	 * The handler.
 	 */
-	Handler handler = new Handler() {
+	private MyHandler handler = new MyHandler(this) ;
+	
+	private static class MyHandler extends Handler{
+		private SoftReference<ChangePswActivity> softReference;
+		public MyHandler(ChangePswActivity context){
+			softReference = new SoftReference<ChangePswActivity>(context);
+		}
 		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			handler_key key = handler_key.values()[msg.what];
-			switch (key) {
+			ChangePswActivity activity =  softReference.get();
+			if(activity!=null){
+				super.handleMessage(msg);
+				handler_key key = handler_key.values()[msg.what];
+				switch (key) {
 
-			case CLOSE:
-				ChangePswActivity.this.finish();
-				break;
+				case CLOSE:
+					activity.finish();
+					break;
 
-			case CHANGE_SUCCESS:
-				setmanager.setPassword(newPsw);
-				tvResult.setText(R.string.change_success);
-				rlResult.setVisibility(View.VISIBLE);
-				handler.sendEmptyMessageDelayed(handler_key.CLOSE.ordinal(), 1000);
-				break;
+				case CHANGE_SUCCESS:
+					activity.setmanager.setPassword(activity.newPsw);
+					activity.tvResult.setText(R.string.change_success);
+					activity.rlResult.setVisibility(View.VISIBLE);
+					activity.handler.sendEmptyMessageDelayed(handler_key.CLOSE.ordinal(), 1000);
+					break;
 
-			case CHANGE_FAIL:
-				tvResult.setText(R.string.change_fail);
-				rlResult.setVisibility(View.VISIBLE);
-				break;
+				case CHANGE_FAIL:
+					activity.tvResult.setText(R.string.change_fail);
+					activity.rlResult.setVisibility(View.VISIBLE);
+					break;
 			}
 		}
-	};
-
+		}
+	
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
