@@ -398,5 +398,14 @@ public class CmdCenter {
 		cWrite(xpgWifiDevice, JsonKeys.ENVIRMENT_TEMPTURE_BORDER, temp);
 		
 	}
-
+	public void cAirconditionSwitchOn(XPGWifiDevice xpgWifiDevice, boolean isOn) {
+		cWrite(xpgWifiDevice, JsonKeys.AIRCONDITION_ON_OFF, isOn);
+		
+	}
+	public void cAirconditionTemp(XPGWifiDevice xpgWifiDevice, int temp) {
+		cWrite(xpgWifiDevice, JsonKeys.AIRCONDITION_TEMP, temp);
+	}
+	public void cVoiceBorder(XPGWifiDevice xpgWifiDevice, double temp) {
+		cWrite(xpgWifiDevice, JsonKeys.VOICE_BORDER, temp);
+	}
 }

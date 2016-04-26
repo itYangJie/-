@@ -18,6 +18,8 @@
 package com.yj.smarthome.framework.widget;
 
 
+
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,10 +31,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ScrollView;
-
 import com.yj.common.device.DensityUtils;
 import com.yj.smarthome.R;
-
 
 // TODO: Auto-generated Javadoc
 /**
@@ -622,6 +622,7 @@ public class CircularSeekBar extends View {
         boolean up = false;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+            	getParent().requestDisallowInterceptTouchEvent(true);
                 if (x < markPointX + markRange && x > markPointX - markRange && y > markPointY - markRange && y < markPointY + markRange) {
                     setParentScrollAble(false);
                 }
@@ -777,4 +778,5 @@ public class CircularSeekBar extends View {
         // mScrollView.requestDisallowInterceptTouchEvent(false);
         // }
     }
+   
 }

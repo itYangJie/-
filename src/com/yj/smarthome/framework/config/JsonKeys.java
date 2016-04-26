@@ -38,9 +38,9 @@ public class JsonKeys {
 	/** Led开关 */
 	public final static String LED_ON_OFF = "ledSwitch";
 	/** 空调开关 */
-	public final static String  AIRCONDITION_SWITCH= "airConditionSwitch";
+	public final static String  AIRCONDITION_ON_OFF= "airConditionSwitch";
 	/** 空调温度 */
-	public final static String AIRCONDITION_TEMPUTRE = "airConditionTemputre";
+	public final static String AIRCONDITION_TEMP = "airConditionTemputre";
 	/** 热水器开关 */
 	public final static String HOTWATER_ON_OFF = "hotWaterSwitch";
 	/** 热水器水温 */

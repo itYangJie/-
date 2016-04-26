@@ -59,6 +59,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -96,6 +97,13 @@ import com.xtremeprog.xpgconnect.XPGWifiDevice;
  */
 public class MainControlActivity extends BaseActivity implements OnClickListener
 		 {
+	private WaveLoadingView waveLoadingViewVoice;
+	private SeekBar voiceMaxSeekbar;
+	private TextView tv_voice;
+	private LinearLayout linear_voice_max;
+	
+	private SeekBar airConditionSeekBar;
+	private TextView tv_aircondition;
 	private ColorArcProgressBar hotWaterTempBar;
 	private WaveLoadingView waveLoadingView;
 	private SeekBar envirmentMaxSeekbar;
@@ -196,6 +204,7 @@ public class MainControlActivity extends BaseActivity implements OnClickListener
 	 * The handler.
 	 */
 private MyHandler handler = new MyHandler(this) ;
+	
 	
 	private static class MyHandler extends Handler{
 		private SoftReference<MainControlActivity> softReference;
@@ -302,27 +311,7 @@ private MyHandler handler = new MyHandler(this) ;
 	
 	}
 	
-	/**
-	 * 界面更新ui操作
-	 */
-	private void upDateUi() {
-		//客厅的开关
-		ledSwitchView.setChecked((Boolean) statuMap.get(JsonKeys.LED_ON_OFF));
-		//热水器开关
-		boolean isHotWaterOpen = (Boolean) statuMap.get(JsonKeys.HOTWATER_ON_OFF);
-		if(!isHotWaterOpen){
-			hotWaterTempBar.setTitle("热水器未打开,点击打开");
-			hotWaterTempBar.setCurrentValues(0);
-		}else{
-			hotWaterTempBar.setTitle("当前热水器温度");
-			hotWaterTempBar.setCurrentValues(Float.parseFloat( (String) statuMap.get(JsonKeys.HOTWATER_TEMP)));
-		}
-		
-		//环境温度
-		int tempture = Integer.parseInt((String) statuMap.get(JsonKeys.ENVIRMENT_TEMPTURE));
-		waveLoadingView.setProgressValue(tempture+40);
-		waveLoadingView.setCenterTitle(tempture+"摄氏度");
-	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -474,11 +463,65 @@ private MyHandler handler = new MyHandler(this) ;
 	 * Inits the params.
 	 */
 	private void initParams() {
+
 		statuMap = new ConcurrentHashMap<String, Object>();
 		alarmList = new ArrayList<DeviceAlarm>();
 		alarmShowList = new ArrayList<String>();
 		refreshMenu();
 		refreshMainControl();
+	}
+	/**
+	 * 界面更新ui操作
+	 */
+	private void upDateUi() {
+		//客厅的开关
+		ledSwitchView.setChecked((Boolean) statuMap.get(JsonKeys.LED_ON_OFF));
+		//热水器开关
+		boolean isHotWaterOpen = (Boolean) statuMap.get(JsonKeys.HOTWATER_ON_OFF);
+		if(!isHotWaterOpen){
+			hotWaterTempBar.setTitle("热水器未打开,点击打开");
+			hotWaterTempBar.setCurrentValues(0);
+		}else{
+			hotWaterTempBar.setTitle("当前热水器温度");
+			hotWaterTempBar.setCurrentValues(Float.parseFloat( (String) statuMap.get(JsonKeys.HOTWATER_TEMP)));
+		}
+		boolean isAirconditionOpen = (Boolean) statuMap.get(JsonKeys.AIRCONDITION_ON_OFF);
+		if(!isAirconditionOpen){
+			tv_aircondition.setText("空调未打开，点击打开");
+			airConditionSeekBar.setProgress(0);
+		}else{
+			int airconditionTemp = Integer.parseInt((String)statuMap.get(JsonKeys.AIRCONDITION_TEMP));
+			tv_aircondition.setText("空调已打开,设置温度为"+airconditionTemp+"摄氏度");
+			airConditionSeekBar.setProgress(airconditionTemp-12);
+		}
+		
+		
+		//环境温度
+		int currentTemp = Integer.parseInt((String) statuMap.get(JsonKeys.ENVIRMENT_TEMPTURE));
+		int currentTempBorder = Integer.parseInt((String) statuMap.get(JsonKeys.ENVIRMENT_TEMPTURE_BORDER));
+		
+		if(currentTemp>=currentTempBorder){
+			waveLoadingView.setProgressValue(100);
+		}else{
+			int progress = (int) (currentTemp*100*1.0/currentTempBorder);
+			waveLoadingView.setProgressValue(progress);
+		}
+		
+		waveLoadingView.setCenterTitle(currentTemp+"摄氏度");
+		//超声波传感器
+		
+		float currentVoice = Float.parseFloat((String) statuMap.get(JsonKeys.VOICE));
+		float currentVoiceBorder = Float.parseFloat((String) statuMap.get(JsonKeys.VOICE_BORDER));
+		
+		if(currentVoice>=currentVoiceBorder){
+			waveLoadingViewVoice.setProgressValue(100);
+		}else{
+			int progress = (int) (currentVoice*100/currentVoiceBorder);
+			waveLoadingViewVoice.setProgressValue(progress);
+		}
+		
+		waveLoadingViewVoice.setCenterTitle(currentVoice+"");
+		
 	}
 	/**
 	 * 主显示界面viewpager的adapter
@@ -506,6 +549,8 @@ private MyHandler handler = new MyHandler(this) ;
 	            	view = View.inflate(MainControlActivity.this, R.layout.pager_home_info, null);
 	            	ledSwitchView = (SlideSwitchView)view.findViewById(R.id.mSlideSwitchView);
 	            	hotWaterTempBar = (ColorArcProgressBar)view.findViewById(R.id.bar2);
+	            	airConditionSeekBar = (SeekBar) view.findViewById(R.id.airconditionSeekbar);
+	            	tv_aircondition = (TextView)view.findViewById(R.id.tv_aircondition);
 	            	hotWaterTempBar.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View arg0) {
@@ -529,12 +574,113 @@ private MyHandler handler = new MyHandler(this) ;
 							mCenter.cLedSwitchOn(mXpgWifiDevice, isChecked);
 						}
 					});
+	            	tv_aircondition.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View arg0) {
+							boolean isAirconditionOpen = (Boolean) statuMap.get(JsonKeys.AIRCONDITION_ON_OFF);
+							if(!isAirconditionOpen){
+								int airconditionTemp = Integer.parseInt((String)statuMap.get(JsonKeys.AIRCONDITION_TEMP));
+								tv_aircondition.setText("空调已打开,设置温度为"+airconditionTemp+"摄氏度");
+								airConditionSeekBar.setProgress(airconditionTemp-12);
+								mCenter.cAirconditionSwitchOn(mXpgWifiDevice, true);
+								statuMap.put(JsonKeys.AIRCONDITION_ON_OFF, true);
+							}else{
+								tv_aircondition.setText("空调未打开，点击打开");
+								airConditionSeekBar.setProgress(0);
+								mCenter.cAirconditionSwitchOn(mXpgWifiDevice, false);
+								statuMap.put(JsonKeys.AIRCONDITION_ON_OFF, false);
+							}
+						}
+					});
+	            	airConditionSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+						@Override
+						public void onStopTrackingTouch(SeekBar arg0) {
+							boolean isAirconditionOpen = (Boolean) statuMap.get(JsonKeys.AIRCONDITION_ON_OFF);
+							if(!isAirconditionOpen){
+								tv_aircondition.setText("空调未打开，点击打开");
+								airConditionSeekBar.setProgress(0);
+								Toast.makeText(MainControlActivity.this,"抱歉，您还未打开空调",Toast.LENGTH_LONG).show();
+							}else{
+								
+								mCenter.cAirconditionTemp(mXpgWifiDevice, arg0.getProgress()+12);
+								statuMap.put(JsonKeys.AIRCONDITION_TEMP, String.valueOf(arg0.getProgress()+12));
+								tv_aircondition.setText("空调已打开,设置温度为"+(arg0.getProgress()+12)+"摄氏度");
+							}
+						}
+						@Override
+						public void onStartTrackingTouch(SeekBar arg0) {
+							
+						}
+						@Override
+						public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
+							//tv_aircondition.setText("空调已打开,设置温度为"+(arg0.getProgress()+12)+"摄氏度");
+						}
+					});
 	            }else{
 	            	view = View.inflate(MainControlActivity.this, R.layout.pager_envirment_info, null);
 	            	waveLoadingView = (WaveLoadingView)view.findViewById(R.id.waveLoadingView);
 	            	envirmentMaxSeekbar = (SeekBar) view.findViewById(R.id.envirmentMaxSeekbar);
 	            	tv_temp_max = (TextView)view.findViewById(R.id.tv_temp_max);
 	            	linear_temp_max = (LinearLayout)view.findViewById(R.id.linear_temp_max);
+	            	
+	            	waveLoadingViewVoice = (WaveLoadingView)view.findViewById(R.id.waveLoadingViewVoice);
+	            	voiceMaxSeekbar = (SeekBar) view.findViewById(R.id.voiceMaxSeekbar);
+	            	tv_voice = (TextView)view.findViewById(R.id.tv_voice_max);
+	            	linear_voice_max = (LinearLayout)view.findViewById(R.id.linear_voice_max);
+	            	voiceMaxSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+						@Override
+						public void onProgressChanged(SeekBar arg0, int arg1,
+								boolean arg2) {
+							
+							int progress = arg0.getProgress();
+						 	
+							if(progress==7){
+						 		tv_voice.setText("当前超声波报警临界值:"+2.4);
+						 	}else{
+						 		tv_voice.setText("当前超声波报警临界值:"+(0.2*progress+1));
+							}
+						}
+						@Override
+						public void onStartTrackingTouch(SeekBar arg0) {
+							
+						}
+						@Override
+						public void onStopTrackingTouch(SeekBar arg0) {
+							mCenter.cVoiceBorder(mXpgWifiDevice,1+arg0.getProgress()*0.2);
+							statuMap.put(JsonKeys.VOICE_BORDER, String.valueOf(1+arg0.getProgress()*0.2));
+							float currentVoice = Float.parseFloat((String) statuMap.get(JsonKeys.VOICE));
+							float currentVoiceBorder = Float.parseFloat((String) statuMap.get(JsonKeys.VOICE_BORDER));
+							
+							if(currentVoice>=currentVoiceBorder){
+								waveLoadingViewVoice.setProgressValue(100);
+							}else{
+								int progress = (int) (currentVoice*100/currentVoiceBorder);
+								waveLoadingViewVoice.setProgressValue(progress);
+							}
+						
+						}
+					});
+	            	waveLoadingViewVoice.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View arg0) {
+							if(!linear_voice_max.isShown()){
+								waveLoadingViewVoice.setBottomTitle("点击隐藏超声波临界值设置条");
+								linear_voice_max.setVisibility(View.VISIBLE);
+						 	
+						 	int progress = (int)((Float.parseFloat((String) statuMap.get(JsonKeys.VOICE_BORDER))-1)/0.2);
+						 	voiceMaxSeekbar.setProgress(progress);
+						 	if(progress==7){
+						 		tv_voice.setText("当前超声波报警临界值:"+2.4);
+						 	}else{
+						 		tv_voice.setText("当前超声波报警临界值:"+(0.2*progress+1));
+							}
+							}else{
+								waveLoadingViewVoice.setBottomTitle("点击设置超声波传感器报警临界值");
+								linear_voice_max.setVisibility(View.GONE);
+							}
+						}
+					});
+	            	
 	            	envirmentMaxSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 						@Override
 						public void onProgressChanged(SeekBar arg0, int arg1,
@@ -549,6 +695,16 @@ private MyHandler handler = new MyHandler(this) ;
 						public void onStopTrackingTouch(SeekBar arg0) {
 							mCenter.cEenvirTempBorder(mXpgWifiDevice, arg0.getProgress()-40);
 							statuMap.put(JsonKeys.ENVIRMENT_TEMPTURE_BORDER, String.valueOf(arg0.getProgress()-40));
+							int currentTemp = Integer.parseInt((String) statuMap.get(JsonKeys.ENVIRMENT_TEMPTURE));
+							int currentTempBorder = Integer.parseInt((String) statuMap.get(JsonKeys.ENVIRMENT_TEMPTURE_BORDER));
+							
+							if(currentTemp>=currentTempBorder){
+								waveLoadingView.setProgressValue(100);
+							}else{
+								int progress = (int) (currentTemp*100*1.0/currentTempBorder);
+								waveLoadingView.setProgressValue(progress);
+							}
+						
 						}
 					});
 	            	waveLoadingView.setOnClickListener(new OnClickListener() {
