@@ -72,20 +72,7 @@
     <string name="login">我要登录</string>
     <string name="register">免费注册！</string>
     <string name="main_control_title">家居控制台</string>
-    <string name="main_control_timing_shutdown">定时关机</string>
-    <string name="main_control_advanced_features">高级功能</string>
-    <string name="main_control_temp_curve">温度曲线</string>
-    <string name="main_control_celsius">摄氏</string>
-    <string name="main_control_refrigeration">制冷</string>
-    <string name="main_control_indoor_temp">室内温度</string>
-    <string name="main_control_degree">°</string>
-    <string name="main_control_set_temp">设定温度</string>
-    <string name="main_control_low_wind">低风</string>
-    <string name="main_control_regular_wind">中风</string>
-    <string name="main_control_high_wind">高风</string>
-    <string name="main_control_shake_wind">摆风</string>
-    <string name="main_control_turn_on">开机</string>
-    <string name="main_control_timing_turn_on">定时开机</string>
+  
     <string name="register_email">邮箱</string>
     <string name="register_use_mobilephone">手机注册</string>
     <string name="register_use_email">邮箱注册</string>
@@ -151,11 +138,9 @@
 	<string name="send_error">发送失败</string>
 	<string name="recv_error">接收失败</string>
 	<string name="unknow_error">未知错误</string>
-	<string name="disclaimer_conent">深圳市欧杰特科技有限公司保留本软件的所有权，盗版必究。</string>
+	
 	<string name="version_conent">V 0.0.0.1</string>
-	<string name="contact_me">"公司网站: http://www.object-camera.com客服邮箱:
-		support@object-camera.com"
-	</string>
+	
 	<string name="more_about_disclaimer">软件声明</string>
 	<string name="more_about_version">版本信息</string>
 	<string name="more_about_contact">联系我们</string>
@@ -165,24 +150,7 @@
 	<string name="sensorlist_addnewdevice">添加新设备</string>
 	<string name="sensor_list_sensor">传感器</string>
 	<string name="sensorlist_havedevice">您已添加的设备</string>
-	 <string name="add_sensor_infrerad_desc">红外是利用红外辐射的热效应,检测是否有人或者动物经过。</string>
-    <string name="add_sensor_gas_desc">气感是通过气体传感器探测周围环境中可燃气体是否超过安全值。</string>
-    <string name="add_sensor_smoke_desc">烟感是通过监测烟雾的浓度来实现火灾防范。</string>
-    <string name="add_sensor_control_desc">无线遥控就是一种用来远程控制机器的装置。</string>
-    <string name="add_sensor_siren_desc">警笛可以接收遥控器，无线门磁、无线红外等传感器的报警信号</string>
-    <string name="add_sensor_door_desc">门磁是用来探测门、窗、抽屉等是否被非法打开或者移动。</string>
-    <string name="start_codding_gas_desc">按下侧边的按钮，红色指示灯闪动即可</string>
-    <string name="start_codding_smoke_desc">按下侧边的按钮，有声音提示完成对码</string>
-    <string name="start_codding_infrerad_desc">手在红外前摆动一下</string>
-    <string name="start_codding_siren_desc">接通警笛电源</string>
-     <string name="sensor_type_door">门磁</string>
-    <string name="sensor_type_infrared">红外</string>
-    <string name="sensor_type_smoke">烟感</string>
-    <string name="sensor_type_siren">警笛</string>
-    <string name="sensor_type_gas">气感</string> 
-    <string name="sensor_type_remote">遥控器</string>
-    <string name="sensor_type_camera">摄像头</string>
-    <string name="sensor_type_curtain">幕帘</string>
+	 
 
 	<!-- 欢迎界面 -->
 	<string name="str_version">版本</string>
