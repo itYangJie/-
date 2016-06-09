@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <ScrollView android:layout_height="match_parent" android:layout_width="match_parent">
+     <LinearLayout android:layout_width="match_parent" 
+        	     android:orientation="vertical"
+        	     android:layout_height="match_parent">
+<com.yj.smarthome.framework.widget.WaveLoadingView
+    android:id="@+id/waveLoadingView"
+    android:layout_width="280dp"
+    android:layout_height="280dp"
+    android:layout_marginTop="15dp"
+    android:layout_gravity="center"
+    app:wlv_borderColor="@color/colorAccent"
+    app:wlv_borderWidth="3dp"
+    app:wlv_progressValue="40"
+    app:wlv_shapeType="circle"
+    app:wlv_titleBottom="点击设置温度报警临界值"
+    app:wlv_titleBottomColor="#ffffff"
+    app:wlv_titleBottomSize="16sp"
+    app:wlv_titleCenter="Center Title"
+    app:wlv_titleCenterColor="@color/colorPrimaryText"
+    app:wlv_titleCenterSize="35sp"
+    app:wlv_titleTop="当前环境温度"
+    app:wlv_titleTopColor="@color/colorPrimaryText"
+    app:wlv_titleTopSize="20sp"
+    app:wlv_waveAmplitude="55"
+    app:wlv_waveColor="@color/colorAccent"/>  
+    	<LinearLayout 
+    	    android:layout_width="match_parent"
+    	     android:visibility="gone"
+    	     android:layout_marginTop="5dp"
+    	    android:orientation="vertical"
+    	    android:id="@+id/linear_temp_max"
+    	    android:layout_height="wrap_content">
+    	    <TextView android:layout_width="wrap_content"
+    	        android:layout_height="wrap_content"
+    	        android:textColor="#000000"
+    	        android:layout_marginLeft="10dp"
+    	        android:id="@+id/tv_temp_max"
+    	        android:textSize="18sp"
+    	        />
+    	 <SeekBar
+    	       
+                android:id="@+id/envirmentMaxSeekbar"
+                android:layout_marginTop="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:focusable="true"
+                android:maxHeight="5dp"
+                android:minHeight="3dp"
+                android:progress="100"
+                android:progressDrawable="@drawable/po_seekbar"
+                android:thumb="@drawable/seekbar_thumb" />
+    	 </LinearLayout> 
+    <View android:layout_width="match_parent"
+       android:layout_height="0.2dp"
+       android:background="#000"
+       android:id="@+id/line"
+       android:layout_marginLeft="3dp"
+       android:layout_marginRight="3dp"
+       android:layout_marginTop="10dp"
+       
+        android:layout_below="@+id/linear_temp_max"/>
+    	<com.yj.smarthome.framework.widget.WaveLoadingView
+    android:id="@+id/waveLoadingViewVoice"
+    android:layout_width="280dp"
+    android:layout_height="280dp"
+    android:layout_marginTop="15dp"
+    android:layout_gravity="center"
+    app:wlv_borderColor="@color/colorAccent2"
+    app:wlv_borderWidth="3dp"
+    app:wlv_progressValue="40"
+    app:wlv_shapeType="circle"
+    app:wlv_titleBottom="点击设置超声波传感器报警临界值"
+    app:wlv_titleBottomColor="#ffffff"
+    app:wlv_titleBottomSize="13sp"
+    app:wlv_titleCenter="Cente"
+    app:wlv_titleCenterColor="@color/colorPrimaryText"
+    app:wlv_titleCenterSize="35sp"
+    app:wlv_titleTop="当前超声波传感器数值"
+    app:wlv_titleTopColor="@color/colorPrimaryText"
+    app:wlv_titleTopSize="16sp"
+    app:wlv_waveAmplitude="40"
+    app:wlv_waveColor="@color/colorAccent2"/>  
+    	<LinearLayout 
+    	    android:layout_width="match_parent"
+    	     android:visibility="gone"
+    	     android:layout_marginTop="5dp"
+    	    android:orientation="vertical"
+    	    android:id="@+id/linear_voice_max"
+    	    android:layout_height="wrap_content">
+    	    <TextView android:layout_width="wrap_content"
+    	        android:layout_height="wrap_content"
+    	        android:textColor="#000000"
+    	        android:layout_marginLeft="10dp"
+    	        android:id="@+id/tv_voice_max"
+    	        android:textSize="18sp"
+    	        />
+    	 <SeekBar
+    	       
+                android:id="@+id/voiceMaxSeekbar"
+                android:layout_marginTop="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:focusable="true"
+                android:maxHeight="5dp"
+                android:minHeight="3dp"
+               android:max="10"
+                android:progressDrawable="@drawable/po_seekbar"
+                android:thumb="@drawable/seekbar_thumb" />
+    	 </LinearLayout> 
+    </LinearLayout>
+    	 </ScrollView> 
+</LinearLayout>

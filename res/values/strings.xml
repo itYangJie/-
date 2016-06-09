@@ -518,7 +518,7 @@
 	<string name="exit_qu_show">取 消</string>
 	<string name="exit_play_show">确认退出播放?</string>
 	<string name="exit_chenxu_show">确认退出程序?</string>
-	
+	 <string name="main_control_timing_turn_on">定时开机</string>
 	<string name="others">其他</string>
 	 <string name="others_setting_currentinfo">当前设备信息:</string>
 	  <string name="others_local_appver">当前界面固件:</string>
