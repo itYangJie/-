@@ -4,8 +4,35 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="15"
+        android:minSdkVersion="8"
         android:targetSdkVersion="19" />
+     <uses-permission android:name="android.permission.INTERNET" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name=" android.permission.ACCESS_WIFI_STATE " />
+    <uses-feature android:name="android.permission.CHANGE_WIFI_STATE " />
+    <uses-feature android:name="android.permission.WAKE_LOCK" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    
     <uses-permission android:name = "android.permission.GET_TASKS"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -42,15 +69,15 @@
         android:name="com.yj.smarthome.framework.XpgApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:theme="@style/MyAppBaseTheme" >
+        android:theme="@style/MyAppBaseTheme" android:allowTaskReparenting="false">
         <activity
             android:name="com.yj.smarthome.framework.activity.FlushActivity"
             android:label="@string/app_name" >
-            <intent-filter>
+             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>  
         </activity>
         <activity android:name="com.yj.smarthome.framework.activity.BaseActivity" />
         <activity android:name="com.yj.smarthome.framework.activity.account.LoginActivity" />
@@ -140,6 +167,106 @@
         
 		<!-- 在百度开发者中心查询应用的API Key -->
         <meta-data android:name="api_key" android:value="xawMARKwA3WSsgyKDs5nzkOy" />
+    	
+         <activity
+            android:configChanges="keyboardHidden|orientation"
+            android:name="com.ipcamera.demo.LinkCameraSettingActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:configChanges="keyboardHidden|orientation"
+            android:label="Add Camera"
+            android:name="com.ipcamera.demo.AddCameraActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+             android:configChanges="keyboardHidden|orientation"
+             android:screenOrientation="portrait"
+             android:name="com.ipcamera.demo.PlayBackTFActivity">
+        </activity>
+        <activity
+             android:name="com.ipcamera.demo.PlayBackActivity"
+             android:configChanges="keyboardHidden|orientation"
+             android:screenOrientation="landscape">
+        </activity>
+        <activity
+             android:name="com.ipcamera.demo.LocalPictureAndVideoActivity">
+            
+        </activity>
+         <activity
+             android:name="com.ipcamera.demo.SettingActivity">
+            
+        </activity>
+        <activity
+             android:name="com.ipcamera.demo.SettingUserActivity">
+            
+        </activity>
+          <activity
+             android:name="com.ipcamera.demo.SettingSDCardActivity">
+            
+        </activity>
+         <activity
+             android:name="com.ipcamera.demo.LocalVideoGridActivity">
+            
+        </activity>
+         <activity
+             android:name="com.ipcamera.demo.SettingDateActivity">
+            
+        </activity>
+         <activity
+             android:name="com.ipcamera.demo.SettingAlarmActivity">
+            
+        </activity>
+        <activity
+             android:name="com.ipcamera.demo.FirmwareUpdateActiviy">
+            
+        </activity>
+        <activity 
+            android:name="com.ipcamera.demo.SensorListActivty">
+            
+        </activity>
+        <activity 
+            android:name="com.ipcamera.demo.SensorStartCodeActivity">
+            
+        </activity>
+         <activity 
+            android:name="com.ipcamera.demo.EditSensorActivity">
+            
+        </activity>
+        
+         <activity
+             android:name="com.ipcamera.demo.ShowLocalVideoActivity">
+            
+        </activity>
+        <activity
+            android:configChanges="keyboardHidden|orientation"
+            android:label="play"
+            android:name="com.ipcamera.demo.PlayActivity" >
+        </activity>
+        <activity
+            android:configChanges="keyboardHidden|orientation"
+            android:label="WifiSetting"
+            android:launchMode="singleTask"
+            android:name="com.ipcamera.demo.SettingWifiActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name"
+            android:name="com.ipcamera.demo.StartActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" >
+          <!--  <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>  -->
+        </activity>
+
+        <service android:name="com.ipcamera.demo.BridgeService" >
+        </service>
     </application>
 
 </manifest>

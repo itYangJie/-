@@ -46,4 +46,29 @@
     <color name="colorAccent">#297dee</color>
     <color name="colorAccent2">#00ff00</color>
     <color name="colorPrimaryText">#212121</color>
+    
+     <color name="subtitle_color">#ff494949</color>
+    <color name="color_white">#ffffffff</color>
+    <color name="color_shadow">#ff333333</color>
+    <color name="cache_color_hint">#00000000</color>
+    <color name="color_divider">#ffdddddd</color>
+    <color name="color_black">#ff000000</color>
+    <color name="color_less_black">#ee000000</color>
+    <color name="color_info">#ff7F7F7F</color>
+    <color name="more_subtitle">#ff0044ff</color>
+    <color name="color_blue">#ff0000ff</color>
+   
+    <color name="color_green">#ff00dd11</color>
+    <color name="color_grey">#88888888</color>
+    <color name="color_line">#ff444444</color>
+    <color name="color_top_bg">#ff333333</color>
+    <color name="color_grid_pressed">#FF0EAAE4</color>
+    <color name="color_grid_bg">#ff0caae4</color>
+    <color name="color_setting_title_bg">#ff888888</color>
+    <color name="color_less_blue">#ff32aff6</color>
+    <color name="color_ptz_blue">#ff0044aa</color>
+   
+    <color name="button_bg_no">#60ffffff</color>
+
+   
 </resources>

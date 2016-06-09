@@ -63,6 +63,10 @@ public class SettingManager {
 
 	/** The unit. */
 	private final String UNIT = "unit";
+	
+	private static final String CAMERA_EQUIPMENT_ID = "cameraEquipmentId";
+	
+	private static final String CAMERA_PASSWORD = "cameraPassword";
 
 	/** The filter. */
 	static String filter = "=====";
@@ -87,7 +91,20 @@ public class SettingManager {
 		setPassword("");
 		setUserName("");
 	}
+	public void setCameraEquipmentId(String id) {
+		spf.edit().putString(CAMERA_EQUIPMENT_ID, id).commit();
 
+	}
+	public String getCameraEquipmentId() {
+		return spf.getString(CAMERA_EQUIPMENT_ID, "");
+	}
+	public void setCameraPassword(String password) {
+		spf.edit().putString(CAMERA_PASSWORD, password).commit();
+
+	}
+	public String getCameraPassword() {
+		return spf.getString(CAMERA_PASSWORD, "");
+	}
 	/**
 	 * Sets the user name.
 	 *

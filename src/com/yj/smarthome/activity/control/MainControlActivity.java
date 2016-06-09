@@ -85,6 +85,8 @@ import com.yj.smarthome.framework.widget.ColorArcProgressBar;
 import com.yj.smarthome.framework.widget.SlideSwitchView;
 import com.yj.smarthome.framework.widget.SlideSwitchView.OnSwitchChangedListener;
 import com.yj.smarthome.framework.widget.WaveLoadingView;
+import com.ipcamera.demo.AddCameraActivity;
+import com.ipcamera.demo.StartActivity;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
 
 // TODO: Auto-generated Javadoc
@@ -97,6 +99,7 @@ import com.xtremeprog.xpgconnect.XPGWifiDevice;
  */
 public class MainControlActivity extends BaseActivity implements OnClickListener
 		 {
+	private TextView tv_camera;
 	private WaveLoadingView waveLoadingViewVoice;
 	private SeekBar voiceMaxSeekbar;
 	private TextView tv_voice;
@@ -392,7 +395,7 @@ private MyHandler handler = new MyHandler(this) ;
 	 * Inits the views.
 	 */
 	private void initViews() {
-		
+		tv_camera = (TextView)findViewById(R.id.tvCamera);
 		mViewPager = (ViewPager)findViewById(R.id.pager);
 		
         pagerTabStrip=(PagerTabStrip) findViewById(R.id.pager_tab_strip);
@@ -457,7 +460,7 @@ private MyHandler handler = new MyHandler(this) ;
 		rlAlarmTips.setOnClickListener(this);
 		ivMenu.setOnClickListener(this);
 		//tvTitle.setOnClickListener(this);
-		
+		tv_camera.setOnClickListener(this);
 	}
 	/**
 	 * Inits the params.
@@ -756,6 +759,9 @@ private MyHandler handler = new MyHandler(this) ;
 				intent.putExtra("alarm_list", alarmList);
 				startActivity(intent);
 			}
+			break;
+		case R.id.tvCamera:
+			startActivity(new Intent(this,AddCameraActivity.class));
 			break;
 		}
 	}
